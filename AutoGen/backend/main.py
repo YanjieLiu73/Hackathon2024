@@ -1,6 +1,7 @@
 from vector_store import initialize_vector_store
 from backend import team, dialog_print
 
+import os
 import pathlib
 import time
 import asyncio
@@ -40,10 +41,11 @@ async def frontend_run():
     dialog_print(result)
 
 
-def save_results(filename : str, result, dir = "./output/"):
-    with open(dir + filename + '_diaglog.pkl', 'wb') as f:
+def save_results(filename : str, result):
+    dir = os.path.join(os.path.dirname(__file__), 'output')
+    with open(os.path.join(dir, filename + '_diaglog.pkl'), 'wb') as f:
         pickle.dump(result, f)
-    with open(dir + filename + ".md", 'w') as f:
+    with open(os.path.join(dir, filename + ".md"), 'w') as f:
         f.write(result.messages[-1].content)
 
 # question 1, 2,3, 4, 5, 6
@@ -155,7 +157,7 @@ async def M_n_A_profile(company):
 # result = asyncio.run(financial_info("GOOGLE"))
 # result = asyncio.run(oppotunities_competition_info("GOOGLE"))
 # result = asyncio.run(geographic("GOOGLE"))
-result = asyncio.run(M_n_A_profile("GOOGLE"))
+# result = asyncio.run(M_n_A_profile("GOOGLE"))
 
 
-dialog_print(result)
+# dialog_print(result)
