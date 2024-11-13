@@ -1,0 +1,16 @@
+crewai
+openai
+huggingface
+torch
+streamlit
+tqdm
+pandas
+yfinance
+matplotlib
+seaborn
+
+
+openai
+langchain-community
+autogen-agentchat==0.4.0.dev3
+langchain_openai

@@ -3,12 +3,15 @@
 # os.environ["AZURE_OPENAI_API_KEY"] = os.getenv('Key_AzureOpenAI')
 # os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv('Endpoint_AzureOpenAI')
 
-import os
-from dotenv import load_dotenv
-env_path = os.path.join(os.path.dirname(__file__), '..' , '..', ".env")
-load_dotenv(dotenv_path = env_path)
-os.environ['AZURE_OPENAI_API_KEY'] = os.getenv('AZURE_OPENAI_API_KEY')
-os.environ['AZURE_OPENAI_ENDPOINT'] = os.getenv('AZURE_OPENAI_ENDPOINT')
+
+# import os
+# from dotenv import load_dotenv
+# env_path = os.path.join(os.path.dirname(__file__), '..' , '..', ".env")
+# load_dotenv(dotenv_path = env_path)
+# os.environ['AZURE_OPENAI_API_KEY'] = os.getenv('AZURE_OPENAI_API_KEY')
+# os.environ['AZURE_OPENAI_ENDPOINT'] = os.getenv('AZURE_OPENAI_ENDPOINT')
+os.environ["AZURE_OPENAI_API_KEY"] = "1b31fc4eb58c4879960c46f697d72af6"
+os.environ["AZURE_OPENAI_ENDPOINT"] = "https://genai-openai-quantifai.openai.azure.com/"
 
 from autogen_agentchat.agents import CodingAssistantAgent, ToolUseAssistantAgent
 from autogen_agentchat.task import TextMentionTermination
