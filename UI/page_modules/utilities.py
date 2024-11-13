@@ -4,6 +4,7 @@ import streamlit as st
 import os
 import datetime as dt
 from fpdf import FPDF
+from mistletoe import markdown
 
 # Function to save content to a PowerPoint file
 def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
@@ -46,20 +47,16 @@ def save_content_to_pdf(filename="result/Profiler_Report.pdf"):
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
                        "Recent News", "M&A Profile", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
     pdf = FPDF()
+    pdf.add_page()
+    pdf.add_font("dejavu-sans", style="", fname="font/DejaVuSans.ttf")
+    pdf.add_font("dejavu-sans", style="b", fname="font/DejaVuSans-Bold.ttf")
     for title in possible_slides:
         if st.session_state.get(title):
-            # Add a page
-            pdf.add_page()
-            
-            # set style and size of font 
-            # that you want in the pdf
-            pdf.set_font("Arial", size = 15)
 
-            # create a cell
-            title_formatted = title.encode('latin-1', 'replace').decode('latin-1')
-            text = st.session_state[title]
-            text_formatted = text.encode('latin-1', 'replace').decode('latin-1')
-            pdf.cell(200, 10, txt = title_formatted, ln = 1, align = 'C')
-            pdf.cell(200, 10, txt = text_formatted, ln = 2, align = 'C')
+            html_text = markdown(st.session_state[title])
+            pdf.set_font(family="dejavu-sans", style="b", size=20)
+            pdf.cell(200, 10, txt = title, ln = 1, align = 'C')
+            pdf.set_font(family="dejavu-sans", style="", size=12)
+            pdf.write_html(html_text)
     # save the pdf with name .pdf
     pdf.output(filename)   
