@@ -78,7 +78,8 @@ def create_vector_database(file_path: str, format: str, chunk_size: int = 1000, 
             chunk_size=chunk_size, separators=["\n","\n\n"], chunk_overlap=chunk_overlap
         ).split_documents(docs)
 
-        FAISS_mr.add_documents(documents=documents)
+        for single_chunck in documents:
+            FAISS_mr.add_documents(documents=[single_chunck])
 
     return FAISS_mr
 
