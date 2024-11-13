@@ -8,7 +8,7 @@ import asyncio
 import main
 
 ## map backend functions in main.py
-agg_functions = ['overview', 'recent_news_trends', 'financial_info', \
+agg_functions = ['overview', 'recent_news_trends', 'financial_info', 'management_info',\
                  'oppotunities_competition_info', 'geographic', 'M_n_A_profile']
 
 async def run_all_backend_functions(agg_functions, module, company):
