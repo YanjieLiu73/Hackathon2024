@@ -20,7 +20,7 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("barclays.PNG", use_container_width=True)
+st.image("barclays.PNG", use_column_width=True)
 
 st.markdown(
     """
@@ -93,6 +93,8 @@ company_ticker = st_free_text_select(
 
 if company_ticker:
     st.session_state["started"] = True
+    result = get_financial_report(ticker = company_ticker, test = False)
+
 
 # Initialize session state for "started" if not already set
 if "started" not in st.session_state:
@@ -108,8 +110,6 @@ page = st.sidebar.radio("Go to", ["Profiler", "Chat Bot", "Valuation", "About", 
 
 # Only display the content if "Start" button has been clicked
 if st.session_state["started"]:
-
-    result = get_financial_report(ticker = company_ticker, test = False)
     
     # Set the selected page in session state for tracking
     st.session_state["page"] = page

@@ -5,6 +5,7 @@ backend_path = os.path.join(os.path.dirname(__file__), '..', '..', 'AutoGen', 'b
 sys.path.append(backend_path)
 
 import asyncio
+import streamlit as st
 import main
 
 ## map backend functions in main.py
@@ -19,6 +20,9 @@ async def run_all_backend_functions(agg_functions, module, company):
     results = await asyncio.gather(*[getattr(module, func_name)(company) for func_name in agg_functions])
     return {func_name: result.messages[-1].content for func_name, result in zip(agg_functions, results)}
 
+@st.cache_data
+def get_cache_data(ticker):
+    return asyncio.run(run_all_backend_functions(agg_functions, main, ticker))
 
 def get_financial_report(ticker, test=False):
 
@@ -51,7 +55,7 @@ def get_financial_report(ticker, test=False):
         #### call backend agent
 
         # TODO: ticker - company mapping
-        result = asyncio.run(run_all_backend_functions(agg_functions, main, ticker))
+        result = get_cache_data(ticker)
 
         # format
         result = {k:v.replace('TERMINATE', '') for k,v in result.items()}
