@@ -1,5 +1,5 @@
 from pptx import Presentation
-from pptx.util import Pt
+from pptx.util import Pt, Inches
 import streamlit as st
 import os
 import json
@@ -49,7 +49,8 @@ def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
         if st.session_state.get(title, False):
 
             # Add a slide for each section
-            slide = prs.slides.add_slide(prs.slide_layouts[15])
+            slide_layout_num = 16 if title=='Financials' else 15
+            slide = prs.slides.add_slide(prs.slide_layouts[slide_layout_num])
             title_placeholder = slide.placeholders[0]
             content_placeholder = slide.placeholders[14]
 
@@ -57,9 +58,18 @@ def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
             title_placeholder.text = title
             content_placeholder.text = get_summary(st.session_state[title], title, False)
 
+            content_placeholder.text_frame.margin_left = Inches(0.5)
+            content_placeholder.text_frame.margin_top = Inches(0.25)
+            content_placeholder.text_frame.margin_right = Inches(0.5)
+            content_placeholder.text_frame.margin_bottom = Inches(0.25)  
+
             for paragraph in content_placeholder.text_frame.paragraphs:
                 paragraph.font.size = Pt(12)
                 paragraph.space_before = Pt(10)
+
+            if title == 'Financials':
+                slide.shapes.add_picture("result/bar_chart.png", Inches(6), Inches(1.5), width=Inches(4))
+
 
     # Save the presentation
     prs.save(filename)
@@ -82,5 +92,7 @@ def save_content_to_pdf(filename="result/Profiler_Report.pdf"):
             pdf.cell(200, 10, txt = title, ln = 1, align = 'C')
             pdf.set_font(family="dejavu-sans", style="", size=12)
             pdf.write_html(html_text)
+            if title=='Financials':
+                pdf.cell(200, 10, link=pdf.image("result/bar_chart.png", w=100, h=80), align = 'C')
     # save the pdf with name .pdf
     pdf.output(filename)   

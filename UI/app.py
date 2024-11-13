@@ -20,7 +20,7 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("barclays.PNG", use_column_width=True)
+st.image("barclays.PNG", use_container_width=True)
 
 st.markdown(
     """
@@ -143,20 +143,6 @@ else:
     
 # Display slides which will be included in presentation
 if st.session_state.get("page", False) in ["Profiler", "Chat Bot", "Valuation", "About", "Help"]:
-#    st.sidebar.markdown("### Output")
-#    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
-#                       "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
-#    for title in possible_slides:
-#        if st.session_state.get(title, False):
-#            st.sidebar.markdown(title)
-#    # Download presentation
-#    if st.sidebar.button("Download Slides", key=page+"_ppt"):
-#        save_content_to_ppt()
-#        st.write("The slides have been downloaded successfully.")
-#    if st.sidebar.button("Download Report", key=page+"_pdf"):
-#        save_content_to_pdf()
-#        st.write("The report has been downloaded successfully.")
-
     # File uploader in the sidebar
     # Add some space at the top of the sidebar
     for _ in range(20):  # Adjust the number as needed to create more space
