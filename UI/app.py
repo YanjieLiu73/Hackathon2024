@@ -101,7 +101,7 @@ page = st.sidebar.radio("Go to", ["Profiler", "Chat Bot", "Valuation", "About", 
 # Only display the content if "Start" button has been clicked
 if st.session_state["started"]:
 
-    result = get_financial_report(test = True, ticker = company_ticker)
+    result = get_financial_report(ticker = company_ticker, test = False)
     
     # Set the selected page in session state for tracking
     st.session_state["page"] = page
