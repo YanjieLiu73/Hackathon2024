@@ -1,5 +1,5 @@
 from pptx import Presentation
-from pptx.util import Inches
+from pptx.util import Pt
 import streamlit as st
 import os
 import json
@@ -56,6 +56,10 @@ def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
             # Set the title and content
             title_placeholder.text = title
             content_placeholder.text = get_summary(st.session_state[title], title, False)
+
+            for paragraph in content_placeholder.text_frame.paragraphs:
+                paragraph.font.size = Pt(12)
+                paragraph.space_before = Pt(10)
 
     # Save the presentation
     prs.save(filename)
