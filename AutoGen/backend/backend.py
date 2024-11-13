@@ -1,7 +1,14 @@
-import os
+# import os
 
-os.environ["AZURE_OPENAI_API_KEY"] = os.getenv('Key_AzureOpenAI')
-os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv('Endpoint_AzureOpenAI')
+# os.environ["AZURE_OPENAI_API_KEY"] = os.getenv('Key_AzureOpenAI')
+# os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv('Endpoint_AzureOpenAI')
+
+import os
+from dotenv import load_dotenv
+env_path = os.path.join(os.path.dirname(__file__), '..' , '..', ".env")
+load_dotenv(dotenv_path = env_path)
+os.environ['AZURE_OPENAI_API_KEY'] = os.getenv('AZURE_OPENAI_API_KEY')
+os.environ['AZURE_OPENAI_ENDPOINT'] = os.getenv('AZURE_OPENAI_ENDPOINT')
 
 from autogen_agentchat.agents import CodingAssistantAgent, ToolUseAssistantAgent
 from autogen_agentchat.task import TextMentionTermination
