@@ -19,7 +19,7 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("barclays.PNG", use_container_width=True)
+st.image("barclays.PNG", use_column_width=True)
 
 st.markdown(
     """
@@ -42,17 +42,17 @@ def add_styling():
                 flex-direction:column;
             }
             input[type="radio"] + div {
-                background: #63ADD2 !important;
-                color: #FFF;
+                background: #003366 !important;
+                color: white;
                 border-radius: 8px !important;
                 padding: 8px 18px !important;
             }
             input[type="radio"][tabindex="0"] + div {
-                background: #E6FF4D !important;
-                color: #17455C !important;
+                background: #00bfff !important;
+                color: white !important;
             }
             input[type="radio"][tabindex="0"] + div p {
-                color: #17455C !important;
+                color: white !important;
             }
             div[role="radiogroup"] label > div:first-child {
                 display: none !important;
@@ -131,7 +131,7 @@ if uploaded_file is not None:
 if st.session_state["started"]:
     st.sidebar.markdown("### Output")
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
-                       "Recent News", "M&A Profile", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
+                       "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
     for title in possible_slides:
         if st.session_state.get(title, False):
             st.sidebar.markdown(title)

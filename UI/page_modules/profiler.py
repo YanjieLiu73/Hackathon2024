@@ -28,8 +28,8 @@ def show_profiler(result):
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
     # Profiler sub-tabs, map to result key
-    tab_list = ["Overview", "Financials", "Geographic Mix", "Management", "Recent News", "M&A Profile"]
-    res_key = ["overview", "financial_info", "geographic", "oppotunities_competition_info", "recent_news_trends", "M_n_A_profile"]
+    tab_list = ["Overview", "Financials", "Geographic Mix", "Management", "Recent News", "M&A Profile", "Miscellanea"]
+    res_key = ["overview", "financial_info", "geographic", "oppotunities_competition_info", "recent_news_trends", "M_n_A_profile", "oppotunities_competition_info"]
     tab_key_map = dict(zip(tab_list, res_key))
     profiler_tabs = st.tabs(tab_list)
 
@@ -39,7 +39,6 @@ def show_profiler(result):
         # display 
         tab = "Overview"
         res_str = result[tab_key_map[tab]]
-        st.write(f"## {tab}")
         st.write(res_str)
 
         # download ppt
@@ -65,7 +64,6 @@ def show_profiler(result):
         # display
         tab = "Financials"
         res_str = result[tab_key_map[tab]]
-        st.write(f"## {tab}")
         st.write(res_str)
 
         # download ppt
@@ -87,7 +85,6 @@ def show_profiler(result):
         # display 
         tab = "Geographic Mix"
         res_str = result[tab_key_map[tab]]
-        st.write(f"## {tab}")
         st.write(res_str)
 
         # download ppt
@@ -109,8 +106,6 @@ def show_profiler(result):
         # display 
         tab = "Management"
         res_str = result[tab_key_map[tab]]
-        # st.write(f"## {tab}")
-        st.markdown(f"<h4 style='color: red;'>{tab}</h4>", unsafe_allow_html=True)
         st.write(res_str)
 
         # download ppt
@@ -124,7 +119,6 @@ def show_profiler(result):
         # display 
         tab = "Recent News"
         res_str = result[tab_key_map[tab]]
-        st.write(f"## {tab}")
         st.write(res_str)
 
         # download ppt
@@ -138,7 +132,18 @@ def show_profiler(result):
         # display 
         tab = "M&A Profile"
         res_str = result[tab_key_map[tab]]
-        st.write(f"## {tab}")
+        st.write(res_str)
+
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False
+        
+    with profiler_tabs[6]:
+        
+        # display 
+        tab = "Miscellanea"
+        res_str = result[tab_key_map[tab]]
         st.write(res_str)
 
         # download ppt
