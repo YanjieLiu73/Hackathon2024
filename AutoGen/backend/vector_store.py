@@ -1,16 +1,12 @@
 import os
 
-import faiss
-
 os.environ["AZURE_OPENAI_API_KEY"] = "1b31fc4eb58c4879960c46f697d72af6"
 os.environ["AZURE_OPENAI_ENDPOINT"] = "https://genai-openai-quantifai.openai.azure.com/"
 
 from langchain_openai import AzureOpenAIEmbeddings
 
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import TextLoader
 from bs4 import BeautifulSoup
 import glob
 from langchain_core.documents import Document
