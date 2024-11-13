@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_free_text_select import st_free_text_select
 from page_modules.profiler import show_profiler
 from page_modules.chat_bot import show_chat_bot
 from page_modules.valuation import show_valuation
@@ -19,7 +20,7 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("barclays.PNG", use_container_width=True)
+st.image("barclays.PNG", use_column_width=True)
 
 st.markdown(
     """
@@ -44,8 +45,13 @@ def add_styling():
             input[type="radio"] + div {
                 background: #003366 !important;
                 color: white;
-                border-radius: 8px !important;
-                padding: 8px 18px !important;
+                border-radius: 10px !important;
+                padding: 20px 20px !important;
+                width: 160px !important;
+                display: flex;
+                justify-content: center; 
+                align-items: center;
+                box-sizing: border-box;
             }
             input[type="radio"][tabindex="0"] + div {
                 background: #00bfff !important;
@@ -66,12 +72,21 @@ def add_styling():
         </style>
     """)
 
-# Sidebar layout for "Company/ Ticker" input and Start button
-st.sidebar.markdown("### Company/ Ticker")
-company_ticker = st.sidebar.text_input("Enter Company/Ticker", key="company_ticker")
+# layout for "Company/ Ticker" input and Start button
+st.markdown("#### Company/ Ticker")
+ticker_options = [ "AAPL", "AMZN", "JBLU", "LUV", "META", "NVDA", "SAVE", "UAL"]
+company_ticker = st_free_text_select(
+    label=None,
+    options=ticker_options,
+    index=None,
+    format_func=lambda x: x.upper(),
+    placeholder="Hello! Please select or enter a company ticker🤓",
+    disabled=False,
+    delay=300,
+    label_visibility="visible",
+)
 
-# Start button below the company ticker input
-if st.sidebar.button("Start"):
+if company_ticker:
     st.session_state["started"] = True
 
 # Initialize session state for "started" if not already set
@@ -144,7 +159,7 @@ if st.session_state["started"]:
 css = '''
 <style>
     .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
-    font-size:20px;
+    font-size:18px;
     }
     .stTabs [data-baseweb="tab-highlight"] {
         background-color:transparent;
