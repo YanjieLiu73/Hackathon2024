@@ -5,10 +5,22 @@ backend_path = os.path.join(os.path.dirname(__file__), '..', '..', 'AutoGen', 'b
 sys.path.append(backend_path)
 
 import asyncio
-# from main import overview, recent_news_trends, financial_info, oppotunities_competition_info, geographic, M_n_A_profile
+import main
+
+## map backend functions in main.py
+agg_functions = ['overview', 'recent_news_trends', 'financial_info', \
+                 'oppotunities_competition_info', 'geographic', 'M_n_A_profile']
+
+async def run_all_backend_functions(agg_functions, module, company):
+    """
+    Run all functions concurrently and store their results in a dictionary
+    """
+    
+    results = await asyncio.gather(*[getattr(module, func_name)(company) for func_name in agg_functions])
+    return {func_name: result.messages[-1].content for func_name, result in zip(agg_functions, results)}
 
 
-def get_financial_report(test=False, ticker=None):
+def get_financial_report(ticker, test=False):
 
     """
     get the financial report calling backend function
@@ -17,6 +29,8 @@ def get_financial_report(test=False, ticker=None):
     return:
         result = Dict[function_name(str), response(str)]
     """
+
+    ticker = ticker.upper()
     
     if test:
         #### import sample markdown files
@@ -35,17 +49,14 @@ def get_financial_report(test=False, ticker=None):
 
     else:
         #### call backend agent
-        result = {}
 
-        # TODO: ticker - company_name map
-        # res = asyncio.run(financial_info("GOOGLE"))
-        
-        # TODO: function_name - function map
-        # result['financial_info'] = res.messages[-1].content
+        # TODO: ticker - company mapping
+        result = asyncio.run(run_all_backend_functions(agg_functions, main, ticker))
 
-        # TODO: other keys - default ''
+        # format
+        result = {k:v.replace('TERMINATE', '') for k,v in result.items()}
         
         return result
 
 if __name__ == '__main__':
-    print(get_financial_report(False, 'GOOGL'))
+    print(get_financial_report('AAPL'))
