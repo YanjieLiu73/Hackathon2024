@@ -128,7 +128,7 @@ else:
     show_overview()
     
 # Display slides which will be included in presentation
-if st.session_state["page"] in ["Profiler", "Chat Bot", "Valuation"]:
+if st.session_state.get("page", False) in ["Profiler", "Chat Bot", "Valuation", "About", "Help"]:
     st.sidebar.markdown("### Output")
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
                        "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
@@ -143,7 +143,7 @@ if st.session_state["page"] in ["Profiler", "Chat Bot", "Valuation"]:
         save_content_to_pdf()
         st.write("The report has been downloaded successfully.")
 
-            # File uploader in the sidebar
+    # File uploader in the sidebar
     # Add some space at the top of the sidebar
     for _ in range(20):  # Adjust the number as needed to create more space
         st.sidebar.write("")
