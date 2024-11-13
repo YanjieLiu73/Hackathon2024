@@ -1,9 +1,17 @@
+# import os
+
+# import faiss
+
+# os.environ["AZURE_OPENAI_API_KEY"] = os.getenv('Key_AzureOpenAI')
+# os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv('Endpoint_AzureOpenAI')
+
+# load environment variable - saved project root folder
 import os
-
-import faiss
-
-os.environ["AZURE_OPENAI_API_KEY"] = os.getenv('Key_AzureOpenAI')
-os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv('Endpoint_AzureOpenAI')
+from dotenv import load_dotenv
+env_path = os.path.join(os.path.dirname(__file__), '..' , '..', ".env")
+load_dotenv(dotenv_path = env_path)
+os.environ['AZURE_OPENAI_API_KEY'] = os.getenv('AZURE_OPENAI_API_KEY')
+os.environ['AZURE_OPENAI_ENDPOINT'] = os.getenv('AZURE_OPENAI_ENDPOINT')
 
 from langchain_openai import AzureOpenAIEmbeddings
 

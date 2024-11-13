@@ -5,8 +5,34 @@ from page_modules.valuation import show_valuation
 from page_modules.Introduction import show_overview  # Import the Overview function
 from page_modules.call_backend import get_financial_report
 from page_modules.utilities import save_content_to_ppt, save_content_to_pdf
+from page_modules.about import show_about
+from page_modules.help import show_help
 
 import pandas as pd
+
+st.set_page_config(
+    page_title="Pitcher",
+    layout="wide",
+    initial_sidebar_state="expanded"
+    )
+
+with open('style.css') as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+st.image("barclays.PNG", use_container_width=True)
+
+st.markdown(
+    """
+    <style>
+    img{
+    width: 30% !important;
+    padding-top:15px;
+    gap:0.5rem;
+    }
+    </style> 
+""", 
+unsafe_allow_html=True
+ )
 
 def add_styling():
     st.html("""
@@ -55,7 +81,7 @@ if "started" not in st.session_state:
 # Navigation using st.radio for persistent state
 add_styling()
 st.sidebar.markdown("## Navigation")
-page = st.sidebar.radio("Go to", ["Profiler", "Chat Bot", "Valuation"], label_visibility="collapsed")
+page = st.sidebar.radio("Go to", ["Profiler", "Chat Bot", "Valuation", "About", "Help"], label_visibility="collapsed")
 
 # Only display the content if "Start" button has been clicked
 if st.session_state["started"]:
@@ -73,6 +99,10 @@ if st.session_state["started"]:
         show_chat_bot()
     elif st.session_state["page"] == "Valuation":
         show_valuation()
+    elif st.session_state["page"] == "About":
+        show_about()
+    elif st.session_state["page"] == "Help":
+        show_help()
     #st.markdown('</div>', unsafe_allow_html=True)
 else:
     # Display a message prompting the user to click the Start button
@@ -100,8 +130,8 @@ if uploaded_file is not None:
 # Display slides which will be included in presentation
 if st.session_state["started"]:
     st.sidebar.markdown("### Output")
-    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management Information",
-                       "Recent News", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
+    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
+                       "Recent News", "M&A Profile", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
     for title in possible_slides:
         if st.session_state.get(title, False):
             st.sidebar.markdown(title)
@@ -110,3 +140,27 @@ if st.session_state["started"]:
         save_content_to_ppt()
     if st.sidebar.button("Download Report", key=page+"_pdf"):
         save_content_to_pdf()
+
+css = '''
+<style>
+    .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+    font-size:20px;
+    }
+    .stTabs [data-baseweb="tab-highlight"] {
+        background-color:transparent;
+    }
+    .stTabs [data-baseweb="tab-border"] { 
+            background-color: transparent;
+        }
+</style>
+'''
+st.markdown(css, unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <div style='position: fixed; bottom: 0; left: 0; width: 100%; background-color: #00bfff;  padding: 2px; text-align: right;'>
+        <p style='color: white; height: 20px font-size: 10px;'>&copy; 2024 Hackathon Team QuantifAI</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)

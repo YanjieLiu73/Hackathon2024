@@ -1,8 +1,6 @@
-import os
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-
 
 # Sample data for financials and geographic distribution
 ####
@@ -19,7 +17,7 @@ def create_bar_chart():
     ax.set_title("Revenue by Region")
     ax.set_xlabel("Region")
     ax.set_ylabel("Revenue ($)")
-    fig_path = os.path.join(os.path.dirname(__file__),'..', 'result', 'bar_chart.png')
+    fig_path = "result/bar_chart.png"
     plt.savefig(fig_path)  # Save the chart as an image file
     plt.close(fig)
     return fig_path
@@ -29,57 +27,121 @@ def show_profiler(result):
     with open("style.css") as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-    # Profiler sub-tabs
-    profiler_tabs = st.tabs(["Overview", "Financials", "Geographic Mix", "Management", "Recent News"])
+    # Profiler sub-tabs, map to result key
+    tab_list = ["Overview", "Financials", "Geographic Mix", "Management", "Recent News", "M&A Profile"]
+    res_key = ["overview", "financial_info", "geographic", "oppotunities_competition_info", "recent_news_trends", "M_n_A_profile"]
+    tab_key_map = dict(zip(tab_list, res_key))
+    profiler_tabs = st.tabs(tab_list)
 
     # Collect content for each tab
     with profiler_tabs[0]:
-        # overview_str = "This is the company overview with a sample paragraph.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec nisl vel mauris blandit interdum."
-        overview_str = result['overview']
-        st.write("### Overview")
-        st.write(overview_str)
-        agree = st.checkbox("Add Overview to presentation",
-                            value = st.session_state.get('Overview', False))
 
-        st.session_state['Overview'] = overview_str if agree else False
+        # display 
+        tab = "Overview"
+        res_str = result[tab_key_map[tab]]
+        st.write(f"## {tab}")
+        st.write(res_str)
 
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False
+
+    
     with profiler_tabs[1]:
-        financials_str = "Financial Table:\n" + df.to_string()
-        st.write("### Financial Table")
-        st.dataframe(df)
-        st.write("### Financial Bar Chart")
-        chart_path = create_bar_chart()
-        st.image(chart_path)
-        agree = st.checkbox("Add Financials to presentation",
-                            value = st.session_state.get("Financials", False))
+        '''Any table / chart expected here?'''
+        # financials_str = "Financial Table:\n" + df.to_string()
+        # st.write("### Financial Table")
+        # st.dataframe(df)
+        # st.write("### Financial Bar Chart")
+        # chart_path = create_bar_chart()
+        # st.image(chart_path)
+        # agree = st.checkbox("Add Financials to presentation",
+        #                     value = st.session_state.get("Financials", False))
 
-        st.session_state["Financials"] = financials_str if agree else False
-        st.session_state["chart_path"] = chart_path
+        # st.session_state["Financials"] = financials_str if agree else False
+        # st.session_state["chart_path"] = chart_path
 
+        # display
+        tab = "Financials"
+        res_str = result[tab_key_map[tab]]
+        st.write(f"## {tab}")
+        st.write(res_str)
+
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False
+
+    
     with profiler_tabs[2]:
-        geographic_mix_str = "Geographic Distribution Table:\n" + df[["Region", "Revenue"]].to_string()
-        st.write("### Geographic Distribution Table")
-        st.dataframe(df[["Region", "Revenue"]])
-        agree = st.checkbox("Add Geographic Mix to presentation",
-                            value = st.session_state.get("Geographic Mix"))
+        '''Any table expected here?'''
+        # geographic_mix_str = "Geographic Distribution Table:\n" + df[["Region", "Revenue"]].to_string()
+        # st.write("### Geographic Distribution Table")
+        # st.dataframe(df[["Region", "Revenue"]])
+        # agree = st.checkbox("Add Geographic Mix to presentation",
+        #                     value = st.session_state.get("Geographic Mix"))
 
-        st.session_state["Geographic Mix"] = geographic_mix_str if agree else False
+        # st.session_state["Geographic Mix"] = geographic_mix_str if agree else False
 
+        # display 
+        tab = "Geographic Mix"
+        res_str = result[tab_key_map[tab]]
+        st.write(f"## {tab}")
+        st.write(res_str)
+
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False
+
+    
     with profiler_tabs[3]:
-        management_str = "This section could include profiles or key information about the management team."
-        st.write("### Management Information")
-        st.write(management_str)
-        agree = st.checkbox("Add Managment Information to presentation",
-                            value=st.session_state.get("Management Information", False))
+        '''Management? Or oppotunities_competition_info'''
+        # management_str = "This section could include profiles or key information about the management team."
+        # st.write("### Management Information")
+        # st.write(management_str)
+        # agree = st.checkbox("Add Managment Information to presentation",
+        #                     value=st.session_state.get("Management Information", False))
 
-        st.session_state["Management Information"] = management_str if agree else False
+        # st.session_state["Management Information"] = management_str if agree else False
+
+        # display 
+        tab = "Management"
+        res_str = result[tab_key_map[tab]]
+        # st.write(f"## {tab}")
+        st.markdown(f"<h4 style='color: red;'>{tab}</h4>", unsafe_allow_html=True)
+        st.write(res_str)
+
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False
+        
 
     with profiler_tabs[4]:
-        # news_str = "1. Company launches new product.\n2. Q3 earnings report shows positive growth.\n3. Expansion into new markets."
-        news_str = result['news']
-        st.write("### Recent News")
-        st.write(news_str)
-        agree = st.checkbox("Add Recent News to presentation",
-                            value=st.session_state.get('Recent News', False))
+        
+        # display 
+        tab = "Recent News"
+        res_str = result[tab_key_map[tab]]
+        st.write(f"## {tab}")
+        st.write(res_str)
 
-        st.session_state["Recent News"] = news_str if agree else False
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False
+
+
+    with profiler_tabs[5]:
+        
+        # display 
+        tab = "M&A Profile"
+        res_str = result[tab_key_map[tab]]
+        st.write(f"## {tab}")
+        st.write(res_str)
+
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False

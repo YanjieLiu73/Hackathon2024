@@ -1,7 +1,14 @@
-import os
+# import os
 
-os.environ["AZURE_OPENAI_API_KEY"] = os.getenv('Key_AzureOpenAI')
-os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv('Endpoint_AzureOpenAI')
+# os.environ["AZURE_OPENAI_API_KEY"] = os.getenv('Key_AzureOpenAI')
+# os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv('Endpoint_AzureOpenAI')
+
+import os
+from dotenv import load_dotenv
+env_path = os.path.join(os.path.dirname(__file__), '..' , '..', ".env")
+load_dotenv(dotenv_path = env_path)
+os.environ['AZURE_OPENAI_API_KEY'] = os.getenv('AZURE_OPENAI_API_KEY')
+os.environ['AZURE_OPENAI_ENDPOINT'] = os.getenv('AZURE_OPENAI_ENDPOINT')
 
 from autogen_agentchat.agents import CodingAssistantAgent, ToolUseAssistantAgent
 from autogen_agentchat.task import TextMentionTermination
@@ -36,7 +43,7 @@ def agents(llm_base):
         model_client=llm_base,
         registered_tools=[sec_filling_retrieve_tool],
         description='uncover and review relevant information from 10k sec filling reports',
-        system_message="You are a helpful assistant with stock pitch, use your tool to retrieve the most relevant information provided"
+        system_message="You are a helpful assistant with stock pitch, use your tool to retrieve the most relevant information provided, indicate source of your findings"
     )
 
     research_report_analysis_agent = ToolUseAssistantAgent(
@@ -44,7 +51,7 @@ def agents(llm_base):
         model_client=llm_base,
         registered_tools=[report_retrieve_tool],
         description="uncover and review relevant information from research reports",
-        system_message="You are a analyst, use your tools to find the most relevant information and present it in a clear and concise manner.",
+        system_message="You are a analyst, use your tools to find the most relevant information and present it in a clear and concise manner, indicate source of your findings",
     )
 
     news_analysis_agent = ToolUseAssistantAgent(
@@ -52,7 +59,7 @@ def agents(llm_base):
         model_client=llm_base,
         registered_tools=[news_retrieve_tool],
         description="uncover and review relevant information from research reports",
-        system_message="You're a professional news analyst. Use the search tool provided and find the most relevant information and present it in a clear and concise manner.",
+        system_message="You're a professional news analyst. Use the search tool provided and find the most relevant information and present it in a clear and concise manner, indicate source of your findings",
     )
 
     stock_price_analysis_agent = ToolUseAssistantAgent(
@@ -66,7 +73,7 @@ def agents(llm_base):
     report_agent = CodingAssistantAgent(
         name="Report_Agent",
         model_client=llm_base,
-        description="Generate a report based on the search and reports analysis results, which is easy to read in python environment",
+        description="Generate a report based on the search and reports analysis results in markdown format",
         system_message="You are a helpful assistant that can generate a comprehensive report on a given topic based on search and reports analysis results. When you done with generating the report, reply with TERMINATE.",
     )
 
@@ -111,8 +118,8 @@ class team:
         return result
 
 
-    def dialog_print(self, result):
-        for message in result.messages:
-            print(message.source + ":")
-            print(message.content)
-            print('________________________')
+def dialog_print(result):
+    for message in result.messages:
+        print(message.source + ":")
+        print(message.content)
+        print('________________________')

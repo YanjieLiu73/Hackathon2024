@@ -14,8 +14,8 @@ def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
     path = 'template_barclays.pptx'
     prs = Presentation(path)
 
-    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management Information",
-                       "Recent News", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
+    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
+                       "Recent News", "M&A Profile", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
 
     # Create title slide
     slide = prs.slides.add_slide(prs.slide_layouts[8])
@@ -37,31 +37,29 @@ def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
             title_placeholder.text = title
             content_placeholder.text = st.session_state[title]
 
-            # Add the chart to the Financials slide
-            if title == "Financials" and os.path.exists(st.session_state.get("chart_path")):
-                slide.shapes.add_picture(st.session_state["chart_path"], Inches(4), Inches(2), width=Inches(4))
-
     # Save the presentation
     prs.save(filename)
 
 # Function to save content to a PowerPoint file
 def save_content_to_pdf(filename="result/Profiler_Report.pdf"):
 
-    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management Information",
-                       "Recent News", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
+    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
+                       "Recent News", "M&A Profile", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
     pdf = FPDF()
-    pdf.add_page()
     for title in possible_slides:
         if st.session_state.get(title):
             # Add a page
-            # pdf.add_page()
+            pdf.add_page()
             
             # set style and size of font 
             # that you want in the pdf
             pdf.set_font("Arial", size = 15)
 
             # create a cell
-            pdf.cell(200, 10, txt = title, ln = 1, align = 'C')
-            pdf.cell(200, 10, txt = st.session_state[title], ln = 2, align = 'C')
+            title_formatted = title.encode('latin-1', 'replace').decode('latin-1')
+            text = st.session_state[title]
+            text_formatted = text.encode('latin-1', 'replace').decode('latin-1')
+            pdf.cell(200, 10, txt = title_formatted, ln = 1, align = 'C')
+            pdf.cell(200, 10, txt = text_formatted, ln = 2, align = 'C')
     # save the pdf with name .pdf
     pdf.output(filename)   
