@@ -46,6 +46,7 @@ def save_results(filename : str, result, dir = "./output/"):
     with open(dir + filename + ".md", 'w') as f:
         f.write(result.messages[-1].content)
 
+
 # question 1, 2,3, 4, 5, 6
 async def overview(company):
     overview_info_team = team(['sec_filling_report_analysis_agent', 'report_agent'])
@@ -58,8 +59,11 @@ async def overview(company):
         "Any marquee customer logos?"
     ]
 
+    general_prompt = f"Expand each question and make as detailed as possible, and give me as more information as possible for {company}?\n. Use agents to get the charts and pictures and produce all the output with references. Also, produce the tables in the output wherever needed. For news related data give me the exact source. Reference for each of the number in the output is important"
+
+    # general_prompt = f"Elaborate each question. Provide all the details about the company {company} from the relevant sources. Also add numeric data if needed and provide referrences for everything.\n"
     result = await overview_info_team.run(
-        f"Elaborate each question, and give me as more information as possible for {company}?\n" + "\n".join(questions))
+        general_prompt + "\n".join(questions))
 
     save_results('overview', result)
     # overview_info_team.dialog_print(result)
@@ -76,8 +80,9 @@ async def recent_news_trends(company):
         "Has the company indicated any materials change to its business operations?",
     ]
 
+    general_prompt = f"Expand each question and make as detailed as possible, and give me as more information as possible for {company}?\n. Use agents to get the charts and pictures and produce all the output with references. Also, produce the tables in the output wherever needed. For news related data give me the exact source. Reference for each of the number in the output is important"
     result = await news_trend_team.run(
-        f"Elaborate each question, and give me as more information as possible for {company}?\n" + "\n".join(questions))
+        general_prompt + "\n".join(questions))
 
     save_results('recent_news_trends', result)
     return result
@@ -95,8 +100,9 @@ async def financial_info(company):
         "If the company if private, are there any indications to its value? (e.g. procedent capital raises, parent valuation marks, prior transactions)"
     ]
 
+    general_prompt = f"Expand each question and make as detailed as possible, and give me as more information as possible for {company}?\n. Use agents to get the charts and pictures and produce all the output with references. Also, produce the tables in the output wherever needed. For news related data give me the exact source. Reference for each of the number in the output is important"
     result = await financial_info_team.run(
-        f"Elaborate each question, and give me as more information as possible for {company}?\n" + "\n".join(questions))
+        general_prompt + "\n".join(questions))
 
     save_results('financial_info', result)
     return result
@@ -109,9 +115,9 @@ async def oppotunities_competition_info(company):
         "Who are company's competitors?",
         "How big is the company's addressable market?",
     ]
-
+    general_prompt = f"Expand each question and make as detailed as possible, and give me as more information as possible for {company}?\n. Use agents to get the charts and pictures and produce all the output with references. Also, produce the tables in the output wherever needed. For news related data give me the exact source. Reference for each of the number in the output is important"
     result = await oppo_compet_team.run(
-        f"Elaborate each question, and give me as more information as possible for {company}?\n" + "\n".join(questions))
+        general_prompt + "\n".join(questions))
 
     save_results('oppotunities_competition_info', result)
     return result
@@ -124,9 +130,9 @@ async def geographic(company):
         "Where is company based?",
         "What geographies does the company operate in/has offices in?",
     ]
-
+    general_prompt = f"Expand each question and make as detailed as possible, and give me as more information as possible for {company}?\n. Use agents to get the charts and pictures and produce all the output with references. Also, produce the tables in the output wherever needed. For news related data give me the exact source. Reference for each of the number in the output is important"
     result = await geographic_team.run(
-        f"Elaborate each question, and give me as more information as possible for {company}?\n" + "\n".join(questions))
+        general_prompt + "\n".join(questions))
 
     save_results('geographic', result)
     return result
@@ -139,9 +145,9 @@ async def M_n_A_profile(company):
         "Has the company engaged in any mergers and acquisitions activity?(completed, announced or terminated)",
         "Has the company indicated that it is looking to sell itself or any of its divisions or to buy something?",
     ]
-
+    general_prompt = f"Expand each question and make as detailed as possible, and give me as more information as possible for {company}?\n. Use agents to get the charts and pictures and produce all the output with references. Also, produce the tables in the output wherever needed. For news related data give me the exact source. Reference for each of the number in the output is important"
     result = await M_n_A_profile_team.run(
-        f"Elaborate each question, and give me as more information as possible for {company} in 2023?\n" + "\n".join(questions))
+        general_prompt + "\n".join(questions))
 
     save_results('M_n_A_profile', result)
     return result
