@@ -1,8 +1,11 @@
 import streamlit as st
 
 def show_help():
-    st.write("## Help")
-    st.write("### How to Use This Dashboard")
-    st.write("1. Enter the Company/Ticker in the sidebar and click the 'Start' button.")
-    st.write("2. Upload relevant data files if available.")
-    st.write("3. Navigate between sections using the options in the sidebar.")
+    st.write("Need assistance? Our support team is here to help you with any questions or issues you may have. Explore our help resources or contact our support team directly.")
+
+    # Example help resources
+    st.write("**Help Resources:**")
+    st.write("- [User Guide](#)")
+    st.write("- [FAQ](#)")
+    st.write("- [Support Forum](#)")
+    st.write("**Contact Support:** support@pitcher.com")

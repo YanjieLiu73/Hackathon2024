@@ -29,7 +29,7 @@ def show_profiler(result):
 
     # Profiler sub-tabs, map to result key
     tab_list = ["Overview", "Financials", "Geographic Mix", "Management", "Recent News", "M&A Profile", "Miscellanea"]
-    res_key = ["overview", "financial_info", "geographic", "oppotunities_competition_info", "recent_news_trends", "M_n_A_profile", "oppotunities_competition_info"]
+    res_key = ["overview", "financial_info", "geographic", "management_info", "recent_news_trends", "M_n_A_profile", "oppotunities_competition_info"]
     tab_key_map = dict(zip(tab_list, res_key))
     profiler_tabs = st.tabs(tab_list)
 

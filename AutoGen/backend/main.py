@@ -84,6 +84,20 @@ async def recent_news_trends(company):
     save_results('recent_news_trends', result)
     return result
 
+# question 12
+async def management_info(company):
+    news_trend_team = team(['sec_filling_report_analysis_agent', 'report_agent'])
+
+    questions = [
+        "Who is the leadership team? Has the company indicated any pending changes to its leadership team"
+    ]
+
+    result = await news_trend_team.run(
+        f"Elaborate each question, and give me as more information as possible for {company}?\n" + "\n".join(questions))
+
+    save_results('management_info', result)
+    return result
+
 
 # question  13, 14, 15, 16, 17
 async def financial_info(company):

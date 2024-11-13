@@ -12,10 +12,10 @@ def create_agent():
 
     # init AzureChatOpenAI
     from langchain.chat_models import AzureChatOpenAI
-    os.environ['AZURE_OPENAI_API_KEY'] = os.getenv('AZURE_OPENAI_API_KEY')
-    os.environ['AZURE_OPENAI_ENDPOINT'] = os.getenv('AZURE_OPENAI_ENDPOINT')
+    os.environ['AZURE_OPENAI_API_KEY'] = "1b31fc4eb58c4879960c46f697d72af6"
+    os.environ['AZURE_OPENAI_ENDPOINT'] = "https://genai-openai-quantifai.openai.azure.com/"
     os.environ['OPENAI_API_VERSION'] = '2024-02-01'
-    llm = AzureChatOpenAI(deployment_name='gpt-4', model_name='gpt-4')
+    llm = AzureChatOpenAI(model_name='gpt-4o')
     
     return llm
 
@@ -64,12 +64,13 @@ def query_agent(agent, query):
     return response.content
 
 
-# Initialize chat history in session state
-if "chat_history" not in st.session_state:
-    st.session_state["chat_history"] = []
-
 
 def show_chat_bot():
+    
+    # Initialize chat history in session state
+    if "chat_history" not in st.session_state:
+        st.session_state["chat_history"] = []
+    
     st.write("## Chat Bot Section")
     query = st.text_area("Insert your query")
     # st.text_input("Enter your question or prompt here:")

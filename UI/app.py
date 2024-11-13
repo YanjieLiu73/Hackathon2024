@@ -45,13 +45,17 @@ def add_styling():
             input[type="radio"] + div {
                 background: #003366 !important;
                 color: white;
+                font-size: 18px !important;
                 border-radius: 10px !important;
-                padding: 20px 20px !important;
+                padding: 10px 20px !important;
                 width: 160px !important;
                 display: flex;
                 justify-content: center; 
                 align-items: center;
                 box-sizing: border-box;
+            }
+            input[type="radio"] + div p {
+                font-size: 18px !important;
             }
             input[type="radio"][tabindex="0"] + div {
                 background: #00bfff !important;
@@ -59,6 +63,7 @@ def add_styling():
             }
             input[type="radio"][tabindex="0"] + div p {
                 color: white !important;
+                font-size: 18px !important;
             }
             div[role="radiogroup"] label > div:first-child {
                 display: none !important;
@@ -74,7 +79,7 @@ def add_styling():
 
 # layout for "Company/ Ticker" input and Start button
 st.markdown("#### Company/ Ticker")
-ticker_options = [ "AAPL", "AMZN", "JBLU", "LUV", "META", "NVDA", "SAVE", "UAL"]
+ticker_options = [ "AAL", "AAPL", "AMZN", "GOOGL", "JBLU", "LUV", "META", "NVDA", "SAVE", "UAL"]
 company_ticker = st_free_text_select(
     label=None,
     options=ticker_options,
@@ -93,6 +98,9 @@ if company_ticker:
 if "started" not in st.session_state:
     st.session_state["started"] = False
     
+# Adjust the number as needed to create more space
+for _ in range(5):  
+    st.sidebar.write("")
 # Navigation using st.radio for persistent state
 add_styling()
 st.sidebar.markdown("## Navigation")
@@ -106,8 +114,6 @@ if st.session_state["started"]:
     # Set the selected page in session state for tracking
     st.session_state["page"] = page
 
-    #st.markdown('<div class="main-content">', unsafe_allow_html=True)
-    # Display the selected page content
     if st.session_state["page"] == "Profiler":
         show_profiler(result)
     elif st.session_state["page"] == "Chat Bot":
@@ -118,32 +124,11 @@ if st.session_state["started"]:
         show_about()
     elif st.session_state["page"] == "Help":
         show_help()
-    #st.markdown('</div>', unsafe_allow_html=True)
 else:
-    # Display a message prompting the user to click the Start button
-    st.write("Please enter a Company/Ticker and click the Start button to begin.")
     show_overview()
     
-# File uploader in the sidebar
-st.sidebar.markdown("### Upload a File")
-uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
-
-# Display uploaded file info (for demonstration)
-if uploaded_file is not None:
-    st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
-    if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        df = pd.read_excel(uploaded_file)
-        st.write("### Uploaded Excel File Content")
-        st.dataframe(df)
-    elif uploaded_file.type == "text/csv":
-        df = pd.read_csv(uploaded_file)
-        st.write("### Uploaded CSV File Content")
-        st.dataframe(df)
-    elif uploaded_file.type == "application/pdf":
-        st.write("PDF files cannot be displayed directly here, but they are uploaded successfully.")
-
 # Display slides which will be included in presentation
-if st.session_state["started"]:
+if st.session_state["page"] in ["Profiler", "Chat Bot", "Valuation"]:
     st.sidebar.markdown("### Output")
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
                        "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
@@ -153,9 +138,32 @@ if st.session_state["started"]:
     # Download presentation
     if st.sidebar.button("Download Slides", key=page+"_ppt"):
         save_content_to_ppt()
+        st.write("The slides have been downloaded successfully.")
     if st.sidebar.button("Download Report", key=page+"_pdf"):
         save_content_to_pdf()
+        st.write("The report has been downloaded successfully.")
 
+            # File uploader in the sidebar
+    # Add some space at the top of the sidebar
+    for _ in range(20):  # Adjust the number as needed to create more space
+        st.sidebar.write("")
+
+    st.sidebar.markdown("### Upload a File")
+    uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
+
+    # Display uploaded file info (for demonstration)
+    if uploaded_file is not None:
+        st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
+        if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+            df = pd.read_excel(uploaded_file)
+            st.write("### Uploaded Excel File Content")
+        elif uploaded_file.type == "text/csv":
+            df = pd.read_csv(uploaded_file)
+            st.write("### Uploaded CSV File Content")
+        elif uploaded_file.type == "application/pdf":
+            st.write("PDF files cannot be displayed directly here, but they are uploaded successfully.")
+
+        
 css = '''
 <style>
     .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
