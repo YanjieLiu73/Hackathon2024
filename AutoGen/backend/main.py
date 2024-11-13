@@ -85,7 +85,7 @@ async def recent_news_trends(company):
 
 # question  13, 14, 15, 16, 17
 async def financial_info(company):
-    financial_info_team = team(['news_analysis_agent', 'research_report_analysis_agent', 'stock_price_analysis_agent', 'report_agent'])
+    financial_info_team = team(['sec_filling_report_analysis_agent', 'news_analysis_agent', 'research_report_analysis_agent', 'stock_price_analysis_agent', 'report_agent'])
 
     questions = [
         "If the company is public, how is its share price look like?",
@@ -152,10 +152,10 @@ async def M_n_A_profile(company):
 
 # result = asyncio.run(overview("GOOGLE"))
 # result = asyncio.run(recent_news_trends("GOOGLE"))
-result = asyncio.run(financial_info("GOOGLE"))
+# result = asyncio.run(financial_info("GOOGLE"))
 # result = asyncio.run(oppotunities_competition_info("GOOGLE"))
 # result = asyncio.run(geographic("GOOGLE"))
-# result = asyncio.run(M_n_A_profile("GOOGLE"))
+result = asyncio.run(M_n_A_profile("GOOGLE"))
 
 
-# dialog_print(result)
+dialog_print(result)

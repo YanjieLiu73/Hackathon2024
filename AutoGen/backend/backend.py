@@ -42,24 +42,24 @@ def agents(llm_base):
         name='SEC_filling_report_analyst',
         model_client=llm_base,
         registered_tools=[sec_filling_retrieve_tool],
-        description='uncover and review relevant information from 10k sec filling reports',
-        system_message="You are a helpful assistant with stock pitch, use your tool to retrieve the most relevant information provided, indicate source of your findings"
+        description='uncover and review relevant information from 10k sec filling reports, and cite the information source (from which document, at which page)',
+        system_message="You are a helpful assistant with stock pitch, use your tool to retrieve the most relevant information provided. If you get the information from your tool, cite the metadata information from your tools output, otherwise cite 'other source'."
     )
 
     research_report_analysis_agent = ToolUseAssistantAgent(
         name="research_report_analyst",
         model_client=llm_base,
         registered_tools=[report_retrieve_tool],
-        description="uncover and review relevant information from research reports",
-        system_message="You are a analyst, use your tools to find the most relevant information and present it in a clear and concise manner, indicate source of your findings",
+        description="uncover and review relevant information from research reports, and cite the information source (from which document, at which page)",
+        system_message="You are a analyst, use your tools to find the most relevant information and present it in a clear and concise manner. If you get the information from your tool, cite the metadata information from your tools output, otherwise cite 'other source'.",
     )
 
     news_analysis_agent = ToolUseAssistantAgent(
         name="news_analyst",
         model_client=llm_base,
         registered_tools=[news_retrieve_tool],
-        description="uncover and review relevant information from research reports",
-        system_message="You're a professional news analyst. Use the search tool provided and find the most relevant information and present it in a clear and concise manner, indicate source of your findings",
+        description="uncover and review relevant information from research reports, and cite the information sourcen (from which document, at which page)",
+        system_message="You're a professional news analyst. Use the search tool provided and find the most relevant information and present it in a clear and concise manner. If you get the information from your tool, cite the metadata information from your tools output, otherwise cite 'other source'.",
     )
 
     stock_price_analysis_agent = ToolUseAssistantAgent(
@@ -74,7 +74,7 @@ def agents(llm_base):
         name="Report_Agent",
         model_client=llm_base,
         description="Generate a report based on the search and reports analysis results in markdown format",
-        system_message="You are a helpful assistant that can generate a comprehensive report on a given topic based on search and reports analysis results. When you done with generating the report, reply with TERMINATE.",
+        system_message="You are a helpful assistant that can generate a comprehensive report on a given topic based on search and reports analysis results. You must CITE source of the information. When you done with generating the report, reply with TERMINATE.",
     )
 
     agents_mapping = {
