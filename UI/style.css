@@ -31,9 +31,9 @@
 .stTabs [data-baseweb="tab"] {
     background-color: #003366;
     color: white;
-    padding: 10px 20px;
+    padding: 10px 10px;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 24px;
     margin-right: 5px;
 }
 
@@ -45,6 +45,13 @@
     background-color: #00bfff;
     color: white;
     font-weight: bold;
+}
+.block-container {
+    padding-top: 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1.5rem;
+
 }
 
 /* Main content area */

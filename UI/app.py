@@ -11,7 +11,31 @@ from page_modules.help import show_help
 
 import pandas as pd
 
-st.set_page_config(page_title="Company Analysis Dashboard", layout="wide")
+
+
+st.set_page_config(
+    page_title="Pitcher",
+    layout="wide",
+    initial_sidebar_state="expanded"
+    )
+
+with open('style.css') as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+st.image("barclays.PNG", use_column_width=True)
+
+st.markdown(
+    """
+    <style>
+    img{
+    width: 30% !important;
+    padding-top:15px;
+    gap:0.5rem;
+    }
+    </style> 
+""", 
+unsafe_allow_html=True
+ )
 
 # Sidebar layout for "Company/ Ticker" input and Start button
 st.sidebar.markdown("### Company/ Ticker")
@@ -52,7 +76,7 @@ if st.session_state["started"]:
     #st.markdown('</div>', unsafe_allow_html=True)
 
     # Display slides which will be included in presentation
-    possible_slides = ["Overview", "Financials", "Geographic Mix", "Management Information",
+    possible_slides = ["OVERVIEW", "Financials", "Geographic Mix", "Management Information",
                        "Recent News", "M&A Profile", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
     for title in possible_slides:
         if st.session_state.get(title, False):
@@ -83,3 +107,28 @@ if uploaded_file is not None:
         st.dataframe(df)
     elif uploaded_file.type == "application/pdf":
         st.write("PDF files cannot be displayed directly here, but they are uploaded successfully.")
+
+
+css = '''
+<style>
+    .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+    font-size:20px;
+    }
+    .stTabs [data-baseweb="tab-highlight"] {
+        background-color:transparent;
+    }
+    .stTabs [data-baseweb="tab-border"] { 
+            background-color: transparent;
+        }
+</style>
+'''
+st.markdown(css, unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <div style='position: fixed; bottom: 0; left: 0; width: 100%; background-color: #00bfff;  padding: 2px; text-align: right;'>
+        <p style='color: white; height: 20px font-size: 10px;'>&copy; 2024 Hackathon Team QuantifAI</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
