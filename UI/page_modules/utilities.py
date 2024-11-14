@@ -114,6 +114,7 @@ def save_content_to_pdf(company_ticker, filename="result/Profiler_Report.pdf"):
     pdf.add_page()
     pdf.add_font("dejavu-sans", style="", fname="font/DejaVuSans.ttf")
     pdf.add_font("dejavu-sans", style="b", fname="font/DejaVuSans-Bold.ttf")
+    pdf.add_font("dejavu-sans", style="i", fname="font/DejaVuSans-Bold.ttf")
     for title in possible_slides:
         if st.session_state.get(title, False):
 
@@ -122,9 +123,10 @@ def save_content_to_pdf(company_ticker, filename="result/Profiler_Report.pdf"):
             # Images not yet implemented in report
             html_text = html_text.replace('<img src="https://abc.xyz/images/revenue_distribution_chart.png" alt="Revenue Distribution" />', "[Image not implemented]")
             html_text = html_text.replace('<img src="https://abc.xyz/images/global_offices_map.png" alt="Global Offices" />', "[Image not implemented]")
+            html_text = html_text.replace("<em>(Data reflects notable growth, indicating Google's sustained stock appreciation)</em>", "Italics not yet supported.")
             pdf.set_font(family="dejavu-sans", style="b", size=20)
             pdf.cell(200, 10, txt = title, ln = 1, align = 'C')
-            pdf.set_font(family="dejavu-sans", style="", size=12)
+            pdf.set_font(family="dejavu-sans", style="i", size=12)
             if title!='Financials':
                 pdf.write_html(html_text)
             # Load tables and charts for financials
