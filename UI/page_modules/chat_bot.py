@@ -51,8 +51,11 @@ def show_chat_bot(company_ticker):
             response = query_agent(agent=llm, company_ticker=company_ticker, query=query)
 
         # Add user query and model response to chat history
-        st.session_state.chat_history.append({"sender": "User", "message": query})
-        st.session_state.chat_history.append({"sender": "AI", "message": response})
+#         st.session_state.chat_history.append({"sender": "User", "message": query})
+#         st.session_state.chat_history.append({"sender": "AI", "message": response})
+        
+        st.session_state.chat_history.insert(0,{"sender": "AI", "message": response})
+        st.session_state.chat_history.insert(0,{"sender": "User", "message": query})
         
         # Clear the input box after submission
         st.session_state.user_query = ""
