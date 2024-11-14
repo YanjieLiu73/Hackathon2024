@@ -51,6 +51,7 @@ def gen_competitors_table(ticker):
     def highlight_ticker(s):
         return ['color: blue; font-weight: bold' if s['Symbol'] == ticker else '' for _ in s]
     styled_df = df.style.apply(highlight_ticker, axis=1).format({'Market Cap': '{:.2e}'}, precision=2)
+    styled_df.to_excel(os.path.join(tablechart, f'{ticker}_table.xlsx'))
     return styled_df
 
 
@@ -113,11 +114,10 @@ def generate_financial_tab(ticker):
 if __name__ == '__main__':
     # gen_stock_cumret_plot('AAPL')
     
-    # styled_df = gen_competitors_table('GOOGL')
-    # styled_df.to_excel(os.path.join(tablechart, 'sample.xlsx'))
-    
+    styled_df = gen_competitors_table('GOOGL')
+        
     # gen_pie_chart('AAPL')
     
     # plot_rev_ebit('AAPL')
     
-    generate_financial_tab('GOOGL')
+    # generate_financial_tab('GOOGL')
