@@ -43,7 +43,8 @@ def stock_prices(ticker: str) -> pd.DataFrame:
 # get the information
 
 
-def sector_top_caps(ticker: str, save_dir=None, df_financials=df_financial, top_k=10):
+# get the information
+def sector_top_caps(ticker: str, save_dir=None, df_financials=df_financials, top_k=10):
     sector = df_financials[df_financials['Symbol'] == ticker]['Sector'].item()
     df_sector = df_financials[df_financials['Sector'] == sector]
 
@@ -55,23 +56,24 @@ def sector_top_caps(ticker: str, save_dir=None, df_financials=df_financial, top_
     if not save_dir == None:
         plt.savefig(save_dir)
 
+    plt.title(f"{sector} sector top {top_k} market cap companies relative ratios")
     plt.show()
 
     return df_sorted[['Symbol', 'Name', 'Market Cap', 'Price/Earnings', 'Earnings/Share', 'Price/Sales']]
 
 
-def ts_bar_charts(ticker: str, col, save_dir=None, df_financial_statements=df_statements):
-    df_company = df_financial_statements[df_financial_statements['Company '] == ticker]
+def ts_bar_charts(ticker: str, col: str, save_dir=None, df_financial_statements=df_fin_statements):
+    df_company = df_fin_statements[df_fin_statements['Company '] == ticker]
 
-    plt.bar(df_company['Year'], df_company['Revenue'])
+    plt.bar(df_company['Year'], df_company[col])
 
     if not save_dir == None:
         plt.savefig(save_dir)
-
+    plt.xlabel('Year')
+    plt.ylabel(col)
     plt.show()
 
     return df_company
-
 
 def db_retrieve(db: vector_store.FAISS_manager, query: str, top_k: int = 2) -> list:
     """
