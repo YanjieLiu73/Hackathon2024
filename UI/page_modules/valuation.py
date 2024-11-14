@@ -110,12 +110,18 @@ def show_valuation_empty():
         st.info("Please upload a CSV or Excel file.")
         agree = st.checkbox("Add DCF Analysis", 
                             value = st.session_state.get("Discounted Cash Flow Analysis", False))
-
-        st.session_state["Discounted Cash Flow Analysis"] = sample_dfc_str if agree else False
+        
+        try:
+            st.session_state["Discounted Cash Flow Analysis"] = sample_dfc_str if agree else False
+        except NameError: 
+            st.session_state["Discounted Cash Flow Analysis"] = "No file uploaded"
 
     with valuation_tabs[1]:
         st.info("Please upload a CSV or Excel file.")
         agree = st.checkbox("Add LBO Analysis", 
                             value = st.session_state.get("Leveraged Buyout Analysis", False))
 
-        st.session_state["Leveraged Buyout Analysis"] = sample_lbo_str if agree else False
+        try:
+            st.session_state["Leveraged Buyout Analysis"] = sample_lbo_str if agree else False
+        except NameError:
+            st.session_state["Leveraged Buyout Analysis"] = "No file uploaded"

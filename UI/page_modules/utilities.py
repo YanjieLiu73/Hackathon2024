@@ -50,36 +50,38 @@ def save_content_to_ppt(company_ticker, filename="result/Profiler_Slides.pptx"):
         if st.session_state.get(title, False):
 
             # Add a slide for each section
-            slide_layout_num = 16 if title=='Financials' else 15
-            slide = prs.slides.add_slide(prs.slide_layouts[slide_layout_num])
+            slide = prs.slides.add_slide(prs.slide_layouts[15])
             title_placeholder = slide.placeholders[0]
             content_placeholder = slide.placeholders[14]
 
-            # Set the title and content
+            # Add the title and content
             title_placeholder.text = title
-            content_placeholder.text = get_summary(st.session_state[title], title, False)
+            if title != 'Financials':
+                content_placeholder.text = get_summary(st.session_state[title], title, False)
 
-            content_placeholder.text_frame.margin_left = Inches(0.5)
-            content_placeholder.text_frame.margin_top = Inches(0.25)
-            content_placeholder.text_frame.margin_right = Inches(0.5)
-            content_placeholder.text_frame.margin_bottom = Inches(0.25)  
+                content_placeholder.text_frame.margin_left = Inches(0.5)
+                content_placeholder.text_frame.margin_top = Inches(0.25)
+                content_placeholder.text_frame.margin_right = Inches(0.5)
+                content_placeholder.text_frame.margin_bottom = Inches(0.25)  
 
-            for paragraph in content_placeholder.text_frame.paragraphs:
-                paragraph.font.size = Pt(12)
-                paragraph.space_before = Pt(10)
-
+                for paragraph in content_placeholder.text_frame.paragraphs:
+                    paragraph.font.size = Pt(12)
+                    paragraph.space_before = Pt(10)
+            
+            # Load tables and charts for Financials
             if title == 'Financials':
-                if company_ticker=='AAPL':
-                    slide.shapes.add_picture("result/apple.png", Inches(6), Inches(1.5), width=Inches(4))
-                    df = pd.read_csv("result/apple.csv")
-                else:
-                    slide.shapes.add_picture("result/google.png", Inches(6), Inches(1.5), width=Inches(4))
-                    df = pd.read_csv("result/google.csv")
-                df['Market Cap'] = df['Market Cap'].apply(lambda l: l.replace(',', ''))
+
+                slide.shapes.add_picture(f"page_modules/tablechart/{company_ticker}_cumret.png", Inches(0), Inches(0), width=Inches(4))
+                slide.shapes.add_picture(f"page_modules/tablechart/{company_ticker}_finsnap.png", Inches(0), Inches(4.5), width=Inches(4))
+                slide.shapes.add_picture(f"page_modules/tablechart/{company_ticker}_pie.png", Inches(6), Inches(1.2), width=Inches(4))
+                df = pd.read_excel(f"page_modules/tablechart/{company_ticker}_table.xlsx")
+                
                 df['Market Cap'] = '$' + (df['Market Cap'].astype(float)/1000000000).round(2).astype(str) + 'BB'
-                df.drop(columns=['Name'], inplace=True)
+                df['Price/Sales'] = df['Price/Sales'].round(2)
+                df.drop(columns=['Unnamed: 0', 'Name'], inplace=True, errors='ignore') 
+                
                 # Create a table
-                x, y, cx, cy = Inches(5.75), Inches(4), Inches(5), Inches(1.5)
+                x, y, cx, cy = Inches(5.5), Inches(4.1), Inches(5), Inches(1.5)
                 shape = slide.shapes.add_table(df.shape[0] + 1, df.shape[1], x, y, cx, cy)
                 table = shape.table
 
@@ -115,23 +117,29 @@ def save_content_to_pdf(company_ticker, filename="result/Profiler_Report.pdf"):
     for title in possible_slides:
         if st.session_state.get(title, False):
 
+            # Add text
             html_text = markdown(st.session_state[title])
-            html_text = html_text.replace('<h3>', '<h3 style="color: grey;">')
+            # Images not yet implemented in report
+            html_text = html_text.replace('<img src="https://abc.xyz/images/revenue_distribution_chart.png" alt="Revenue Distribution" />', "[Image not implemented]")
+            html_text = html_text.replace('<img src="https://abc.xyz/images/global_offices_map.png" alt="Global Offices" />', "[Image not implemented]")
             pdf.set_font(family="dejavu-sans", style="b", size=20)
             pdf.cell(200, 10, txt = title, ln = 1, align = 'C')
             pdf.set_font(family="dejavu-sans", style="", size=12)
-            pdf.write_html(html_text)
+            if title!='Financials':
+                pdf.write_html(html_text)
+            # Load tables and charts for financials
             if title=='Financials':
                 pdf.set_x(40)
-                if company_ticker=='AAPL':
-                    pdf.cell(40, 10, link=pdf.image("result/apple.png", w=100, h=80), align = 'C')
-                    df = pd.read_csv("result/apple.csv")
-                else:
-                    pdf.cell(40, 10, link=pdf.image("result/google.png", w=100, h=80), align = 'C')
-                    df = pd.read_csv("result/google.csv")
-                df['Market Cap'] = df['Market Cap'].apply(lambda l: l.replace(',', ''))
+                pdf.cell(40, 10, link=pdf.image(f"page_modules/tablechart/{company_ticker}_cumret.png", w=100, h=80), align = 'C')
+                pdf.set_x(40)
+                pdf.cell(40, 10, link=pdf.image(f"page_modules/tablechart/{company_ticker}_finsnap.png", w=100, h=80), align = 'C')
+                pdf.set_x(40)
+                pdf.cell(40, 10, link=pdf.image(f"page_modules/tablechart/{company_ticker}_pie.png", w=100, h=80), align = 'C')     
+                pdf.set_x(40)
+                df = pd.read_excel(f"page_modules/tablechart/{company_ticker}_table.xlsx")
+                
                 df['Market Cap'] = '$' + (df['Market Cap'].astype(float)/1000000000).round(2).astype(str) + 'BB'
-                df.drop(columns=['Name'], inplace=True)
+                df.drop(columns=['Unnamed: 0'], inplace=True, errors='ignore')
 
                 # Add table header
                 pdf.set_font(family="dejavu-sans", style="", size=8)
