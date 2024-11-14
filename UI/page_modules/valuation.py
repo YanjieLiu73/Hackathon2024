@@ -55,11 +55,13 @@ def show_valuation(uploaded_file):
 
         # Construct queries for DCF and LBO
         dcf_query = (
-            "Using the data provided below, calculate the present value per share of given Corp using a Discounted Cash Flow (DCF) analysis. "
-            "Identify necessary details like cash flows, tax rate, and discount rate from the data as best as possible. "
-            "Please provide the final present value per share at the beginning, followed by detailed steps, calculations, "
-            "assumptions, and any formulas used.\n\n"
-            f"Data:\n{data_text}"
+            """
+            Using the data provided below, calculate the present value per share of given Corp using a Discounted Cash Flow (DCF) analysis. 
+            Please provide the final present value per share at the beginning, followed by detailed steps, calculations, assumptions, and any formulas used.
+            Identify necessary details like cash flows, tax rate, and discount rate from the data as best as possible. 
+            """
+            +"Below is the data:\n"
+            + f"Data:\n{data_text}"
         )
 
         lbo_query = (
@@ -101,4 +103,19 @@ def show_valuation(uploaded_file):
 
     else:
         st.info("Please upload a CSV or Excel file.")
-    
+
+def show_valuation_empty():
+    valuation_tabs = st.tabs(["DCF", "LBO"])
+    with valuation_tabs[0]:
+        st.info("Please upload a CSV or Excel file.")
+        agree = st.checkbox("Add DCF Analysis", 
+                            value = st.session_state.get("Discounted Cash Flow Analysis", False))
+
+        st.session_state["Discounted Cash Flow Analysis"] = sample_dfc_str if agree else False
+
+    with valuation_tabs[1]:
+        st.info("Please upload a CSV or Excel file.")
+        agree = st.checkbox("Add LBO Analysis", 
+                            value = st.session_state.get("Leveraged Buyout Analysis", False))
+
+        st.session_state["Leveraged Buyout Analysis"] = sample_lbo_str if agree else False

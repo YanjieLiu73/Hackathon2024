@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_free_text_select import st_free_text_select
 from page_modules.profiler import show_profiler
 from page_modules.chat_bot import show_chat_bot
-from page_modules.valuation import show_valuation
+from page_modules.valuation import show_valuation, show_valuation_empty
 from page_modules.Introduction import show_overview  # Import the Overview function
 from page_modules.call_backend import get_financial_report
 from page_modules.utilities import save_content_to_ppt, save_content_to_pdf
@@ -131,6 +131,8 @@ if st.session_state["started"]:
     elif st.session_state["page"] == "Valuation":
         if uploaded_file is not None:
             show_valuation(uploaded_file)
+        else:
+            show_valuation_empty()
     elif st.session_state["page"] == "About":
         show_about()
     elif st.session_state["page"] == "Help":
