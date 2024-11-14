@@ -31,6 +31,21 @@ def show_profiler(result):
     # Load custom CSS
     with open("style.css") as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        
+#     css = '''
+#     <style>
+#         .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+#         font-size:18px;
+#         }
+#         .stTabs [data-baseweb="tab-highlight"] {
+#             background-color:transparent;
+#         }
+#         .stTabs [data-baseweb="tab-border"] { 
+#                 background-color: transparent;
+#             }
+#     </style>
+#     '''
+#     st.markdown(css, unsafe_allow_html=True)
 
     # Profiler sub-tabs, map to result key
     tab_list = ["Overview", "Financials", "Geographic Mix", "Management", "Recent News", "M&A Profile", "Miscellanea"]
@@ -53,28 +68,11 @@ def show_profiler(result):
 
     
     with profiler_tabs[1]:
-        '''Any table / chart expected here?'''
-        # financials_str = "Financial Table:\n" + df.to_string()
-        # st.write("### Financial Table")
-        # st.dataframe(df)
-        # st.write("### Financial Bar Chart")
-        # chart_path = create_bar_chart()
-        # st.image(chart_path)
-        # agree = st.checkbox("Add Financials to presentation",
-        #                     value = st.session_state.get("Financials", False))
-
-        # st.session_state["Financials"] = financials_str if agree else False
-        # st.session_state["chart_path"] = chart_path
-
+        
         # display
         tab = "Financials"
         # res_str = result[tab_key_map[tab]]
         # st.write(res_str)
-
-        # download ppt
-        agree = st.checkbox(f"Add {tab}",
-                            value = st.session_state.get(tab, False))
-        st.session_state[tab] = res_str if agree else False
         
         ticker = result['ticker']
         tablechart = os.path.join(os.path.dirname(__file__), 'tablechart')
@@ -93,18 +91,15 @@ def show_profiler(result):
             
         st.subheader('Financial Snapshot')
         st.image(os.path.join(tablechart, f'{ticker}_finsnap.png'), width = 1200)
+        
+        # download ppt
+        agree = st.checkbox(f"Add {tab}",
+                            value = st.session_state.get(tab, False))
+        st.session_state[tab] = res_str if agree else False
 
     
     with profiler_tabs[2]:
-        '''Any table expected here?'''
-        # geographic_mix_str = "Geographic Distribution Table:\n" + df[["Region", "Revenue"]].to_string()
-        # st.write("### Geographic Distribution Table")
-        # st.dataframe(df[["Region", "Revenue"]])
-        # agree = st.checkbox("Add Geographic Mix to presentation",
-        #                     value = st.session_state.get("Geographic Mix"))
-
-        # st.session_state["Geographic Mix"] = geographic_mix_str if agree else False
-
+        
         # display 
         tab = "Geographic Mix"
         res_str = result[tab_key_map[tab]]
@@ -117,15 +112,7 @@ def show_profiler(result):
 
     
     with profiler_tabs[3]:
-        '''Management? Or oppotunities_competition_info'''
-        # management_str = "This section could include profiles or key information about the management team."
-        # st.write("### Management Information")
-        # st.write(management_str)
-        # agree = st.checkbox("Add Managment Information to presentation",
-        #                     value=st.session_state.get("Management Information", False))
-
-        # st.session_state["Management Information"] = management_str if agree else False
-
+        
         # display 
         tab = "Management"
         res_str = result[tab_key_map[tab]]
