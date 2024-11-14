@@ -11,7 +11,7 @@ from autogen_core.components.models import AzureOpenAIChatCompletionClient, User
 
 import yaml
 
-from tools import news_retrieve, sec_filling_retrieve, research_retrieve, stock_prices
+from tools import news_retrieve, sec_filling_retrieve, research_retrieve, stock_prices, financial_statements
 
 
 llm_base = AzureOpenAIChatCompletionClient(
@@ -28,6 +28,7 @@ def agents(llm_base):
     ### tools registration
     stock_prices_tool = FunctionTool(stock_prices, description='Historical prices and volume for a ticker')
     sec_filling_retrieve_tool = FunctionTool(sec_filling_retrieve, description='Relevant 10k sec filling reports info for a question')
+    financial_statement_tool = FunctionTool(financial_statements, description="Relevant financial statement information for a ticker")
     report_retrieve_tool = FunctionTool(research_retrieve, description='Relevant research reports info for a question')
     news_retrieve_tool = FunctionTool(news_retrieve, description='Relevant recent news for a question')
 
@@ -55,6 +56,14 @@ def agents(llm_base):
         system_message="You're a professional news analyst. Use the search tool provided and find the most relevant information and present it in a clear and concise manner. If you get the information from your tool, cite the metadata information from your tools output, otherwise cite 'other source'.",
     )
 
+    financial_statement_analysis_agent = ToolUseAssistantAgent(
+        name="financial_statement_analyst",
+        model_client=llm_base,
+        registered_tools=[financial_statement_tool],
+        description="uncover and review relevant information from financial statement data",
+        system_message="You're a professional stock data analyst",
+    )
+
     stock_price_analysis_agent = ToolUseAssistantAgent(
         name="stock_price_analyst",
         model_client=llm_base,
@@ -74,6 +83,7 @@ def agents(llm_base):
         'sec_filling_report_analysis_agent': sec_filling_report_analysis_agent,
         'research_report_analysis_agent': research_report_analysis_agent,
         'news_analysis_agent': news_analysis_agent,
+        'financial_statement_analysis_agent': financial_statement_analysis_agent,
         'stock_price_analysis_agent': stock_price_analysis_agent,
         'report_agent': report_agent
     }
