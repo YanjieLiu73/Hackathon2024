@@ -55,32 +55,53 @@ def add_styling():
     """)
     
 ### Output
-def output(page, company_ticker):
-    st.sidebar.markdown("### Output")
+# def output(page, company_ticker):
+#     st.sidebar.markdown("### Output")
+#     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
+#                        "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
+#     for title in possible_slides:
+#         if st.session_state.get(title, False):
+#             st.sidebar.markdown(title)
+#     # Download presentation
+
+#     if st.sidebar.button("Download Slides", key=page+"_ppt"):
+#         save_content_to_ppt(company_ticker)
+#         st.sidebar.info("The slides have been downloaded successfully.")
+#     if st.sidebar.button("Download Report", key=page+"_pdf"):
+#         save_content_to_pdf(company_ticker)
+#         st.sidebar.info("The report has been downloaded successfully.")
+        
+def output(page, company_ticker, button_loc1, button_loc2):
+    for _ in range(1):  # Adjust the number as needed to create more space
+        st.sidebar.write("")
+    st.sidebar.markdown("## Output")
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
                        "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
     for title in possible_slides:
         if st.session_state.get(title, False):
             st.sidebar.markdown(title)
+
     # Download presentation
-
-    if st.sidebar.button("Download Slides", key=page+"_ppt"):
-        save_content_to_ppt(company_ticker)
-        st.sidebar.info("The slides have been downloaded successfully.")
-    if st.sidebar.button("Download Report", key=page+"_pdf"):
-        save_content_to_pdf(company_ticker)
-        st.sidebar.info("The report has been downloaded successfully.")
-
+    with button_loc1:
+        if st.button("Download Slides", key=page+"_ppt", use_container_width=True):
+            save_content_to_ppt(company_ticker)
+            st.sidebar.info("The slides have been downloaded successfully.")
+    with button_loc2:
+        if st.button("Download Report", key=page+"_pdf", use_container_width=True):
+            save_content_to_pdf(company_ticker)
+            st.sidebar.info("The report has been downloaded successfully.")
+        
 ### Upload
 def upload():
-    for _ in range(10):  # Adjust the number as needed to create more space
+    for _ in range(13):  # Adjust the number as needed to create more space
         st.sidebar.write("")
     st.sidebar.markdown("## Upload a File")
     uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
     if uploaded_file is not None:
         st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
     return uploaded_file
-    
+
+##### Page setting
 st.set_page_config(
     page_title="Pitcher",
     layout="wide",
@@ -90,7 +111,8 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("pitcher.PNG", use_container_width=True)
+# Title    
+st.image("pitcher.PNG", use_column_width=True)
 
 st.markdown(
     """
@@ -126,7 +148,9 @@ ticker_options = [ "AAL", "AAPL", "AMZN", "GOOGL", "JBLU", "LUV", "META", "NVDA"
 
 if st.session_state["page"] == "Profiler":    
     # layout for "Company/ Ticker" input and Start button
-    st.markdown("##### Company Ticker")
+    col1, col2, col3 = st.columns([7, 1, 1])
+    with col1:
+        st.markdown("##### Company Ticker")
     company_ticker = st_free_text_select(
         label=None,
         options=ticker_options,
@@ -144,7 +168,7 @@ if st.session_state["page"] == "Profiler":
         with st.spinner("PITCHER Running..."):
             time.sleep(5)
             show_profiler(result)
-        output(page, company_ticker)
+        output(page, company_ticker, col2, col3)
         upload() #decoration
     else:
         st.info("Please select or enter a company ticker")
