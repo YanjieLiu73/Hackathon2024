@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 from streamlit_free_text_select import st_free_text_select
 from page_modules.profiler import show_profiler
 from page_modules.chat_bot import show_chat_bot
@@ -10,30 +11,6 @@ from page_modules.about import show_about
 from page_modules.help import show_help
 
 import pandas as pd
-
-st.set_page_config(
-    page_title="Pitcher",
-    layout="wide",
-    initial_sidebar_state="expanded"
-    )
-
-with open('style.css') as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-st.image("pitcher.PNG", use_column_width=True)
-
-st.markdown(
-    """
-    <style>
-    img{
-    width: 70% !important;
-    padding-top:15px;
-    gap:0.5rem;
-    }
-    </style> 
-""", 
-unsafe_allow_html=True
- )
 
 def add_styling():
     st.html("""
@@ -76,68 +53,44 @@ def add_styling():
             }
         </style>
     """)
-
-# layout for "Company/ Ticker" input and Start button
-st.markdown("##### Company Ticker")
-ticker_options = [ "AAL", "AAPL", "AMZN", "GOOGL", "JBLU", "LUV", "META", "NVDA", "SAVE", "UAL"]
-company_ticker = st_free_text_select(
-    label=None,
-    options=ticker_options,
-    index=None,
-    format_func=lambda x: x.upper(),
-    placeholder="Hello! Please select or enter a company ticker🤓",
-    disabled=False,
-    delay=300,
-    label_visibility="visible",
-)
-
-if company_ticker:
-    st.session_state["started"] = True
-    #result = get_financial_report(ticker = company_ticker, test = True)
-
-
-# Initialize session state for "started" if not already set
-if "started" not in st.session_state:
-    st.session_state["started"] = False
     
-# Adjust the number as needed to create more space
+st.set_page_config(
+    page_title="Pitcher",
+    layout="wide",
+    initial_sidebar_state="expanded"
+    )
+
+with open('style.css') as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+st.image("pitcher.PNG", use_column_width=True)
+
+st.markdown(
+    """
+    <style>
+    img{
+    width: 70% !important;
+    padding-top:15px;
+    gap:0.5rem;
+    }
+    </style> 
+""", 
+unsafe_allow_html=True
+ )
+
+
+
+#### Sidebar
 for _ in range(2):  # Adjust the number as needed to create more space
     st.sidebar.write("#### ")
     
-# Navigation using st.radio for persistent state
+### Navigation using st.radio for persistent state
 add_styling()
 st.sidebar.markdown("## Navigation")
-page = st.sidebar.radio("Go to", ["Profiler", "Chat Bot", "Valuation", "About", "Help"], label_visibility="collapsed")
+page = st.sidebar.radio("Go to", ["Profiler", "Chat Bot", "Valuation", "About", "Help"],index=None, label_visibility="collapsed")
 
-for _ in range(10):  # Adjust the number as needed to create more space
-    st.sidebar.write("")
-
-st.sidebar.markdown("## Upload a File")
-uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
-if uploaded_file is not None:
-    st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
-    
-# Only display the content if "Start" button has been clicked
-if st.session_state["started"]:
-    
-    # Set the selected page in session state for tracking
-    st.session_state["page"] = page
-
-    if st.session_state["page"] == "Profiler":
-        result = get_financial_report(ticker = company_ticker, test = True)
-        show_profiler(result)
-    elif st.session_state["page"] == "Chat Bot":
-        show_chat_bot(company_ticker)
-    elif st.session_state["page"] == "Valuation":
-        if uploaded_file is not None:
-            show_valuation(uploaded_file)
-        else:
-            show_valuation_empty()
-    elif st.session_state["page"] == "About":
-        show_about()
-    elif st.session_state["page"] == "Help":
-        show_help()
-
+### Output
+if "page" in st.session_state:
     st.sidebar.markdown("### Output")
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
                        "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
@@ -145,12 +98,77 @@ if st.session_state["started"]:
         if st.session_state.get(title, False):
             st.sidebar.markdown(title)
     # Download presentation
+
     if st.sidebar.button("Download Slides", key=page+"_ppt"):
         save_content_to_ppt(company_ticker)
         st.write("The slides have been downloaded successfully.")
     if st.sidebar.button("Download Report", key=page+"_pdf"):
         save_content_to_pdf(company_ticker)
         st.write("The report has been downloaded successfully.")
+
+### Upload
+for _ in range(10):  # Adjust the number as needed to create more space
+    st.sidebar.write("")
+st.sidebar.markdown("## Upload a File")
+uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
+if uploaded_file is not None:
+    st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
+
+    
+#### main area
+if "page" not in st.session_state:
+    st.session_state["page"] = "Intro"
+else:
+    st.session_state["page"] = page # Set the selected page in session state for tracking
+
+ticker_options = [ "AAL", "AAPL", "AMZN", "GOOGL", "JBLU", "LUV", "META", "NVDA", "SAVE", "UAL"]
+
+if st.session_state["page"] == "Profiler":
+    
+    # layout for "Company/ Ticker" input and Start button
+    st.markdown("##### Company Ticker")
+    company_ticker = st_free_text_select(
+        label=None,
+        options=ticker_options,
+        index=None,
+        format_func=lambda x: x.upper(),
+        placeholder="Hello! Please select or enter a company ticker🤓",
+        disabled=False,
+        delay=300,
+        label_visibility="visible",
+    )
+
+    if company_ticker:
+        with st.spinner("Pitcher Running..."):
+            time.sleep(5)
+            result = get_financial_report(ticker = company_ticker, test = False)
+            show_profiler(result)
+    else:
+        st.info("Please select or enter a company ticker")
+elif st.session_state["page"] == "Chat Bot":
+    st.markdown("##### Company Ticker")
+    company_ticker = st_free_text_select(
+        label=None,
+        options=ticker_options,
+        index=None,
+        format_func=lambda x: x.upper(),
+        placeholder="Hello! Please select or enter a company ticker🤓",
+        disabled=False,
+        delay=300,
+        label_visibility="visible",
+    )
+
+    if company_ticker:
+        show_chat_bot(company_ticker)
+elif st.session_state["page"] == "Valuation":
+    if uploaded_file is not None:
+        show_valuation(uploaded_file)
+    else:
+        show_valuation_empty()
+elif st.session_state["page"] == "About":
+    show_about()
+elif st.session_state["page"] == "Help":
+    show_help()
 else:
     show_overview()
     

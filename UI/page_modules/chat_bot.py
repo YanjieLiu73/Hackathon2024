@@ -15,10 +15,13 @@ def create_agent():
 
 # Query an agent and return the response as a string.
 def query_agent(agent, company_ticker, query):
-
-    prompt = ("Please answer the queries as a professional financial analyst. Please answer the queries based on the given company, the company ticker is " + company_ticker + ". Below is the query. Query: "
-        + query
-    )
+    if company_ticker:
+        prompt = ("Please answer the queries as a professional financial analyst. Please answer the queries based on the given company, the company ticker is " + company_ticker + ". Below is the query. Query: "
+            + query
+        )
+    else:
+        prompt = ("Please answer the queries as a professional financial analyst. Below is the query. Query: "
+            + query)
 
     # Run the prompt through the agent.
     response = agent.invoke(prompt)
@@ -34,7 +37,7 @@ def show_chat_bot(company_ticker):
     if "chat_history" not in st.session_state:
         st.session_state["chat_history"] = []
     
-    st.write("## Chat Bot Section")
+    st.write("##### Chat Bot Section")
     query = st.text_area("Insert your query")
     # st.text_input("Enter your question or prompt here:")
     # st.write(response)
@@ -42,9 +45,10 @@ def show_chat_bot(company_ticker):
     if st.button("Submit Query", type="primary"):
         # Create an agent from the CSV file.
         llm = create_agent()
-    
-        # Query the agent.
-        response = query_agent(agent=llm, company_ticker=company_ticker, query=query)
+        
+        with st.spinner("Generating response..."):
+            # Query the agent.
+            response = query_agent(agent=llm, company_ticker=company_ticker, query=query)
 
         # Add user query and model response to chat history
         st.session_state.chat_history.append({"sender": "User", "message": query})
