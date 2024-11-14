@@ -106,14 +106,15 @@ async def management_info(company):
 
 # question  13, 14, 15, 16, 17
 async def financial_info(company):
-    financial_info_team = team(['sec_filling_report_analysis_agent', 'news_analysis_agent', 'research_report_analysis_agent', 'stock_price_analysis_agent', 'report_agent'])
+    # financial_info_team = team(['sec_filling_report_analysis_agent', 'news_analysis_agent', 'research_report_analysis_agent', 'stock_price_analysis_agent', 'report_agent'])
+    financial_info_team = team(['financial_statement_analysis_agent', 'report_agent'])
 
     questions = [
-        "If the company is public, how is its share price look like?",
-        "If the company is public, how have its valuation multiples performed?",
+        "How is the company's share price look like?",
+        "How have the company's valuation multiples performed?",
         "What is the company's overall financial profile?",
-        "If the company is public, what is the current consensus equity research views on its projections and business performances? What are the target prices and ratings? ",
-        "If the company if private, are there any indications to its value? (e.g. procedent capital raises, parent valuation marks, prior transactions)"
+        "What is the current consensus equity research views on company's projections and business performances? What are the target prices and ratings? ",
+        # "If the company if private, are there any indications to its value? (e.g. procedent capital raises, parent valuation marks, prior transactions)"
     ]
 
     general_prompt = f"Expand each question and make as detailed as possible, and give me as more information as possible for {company}?\n. Use agents to get the charts and pictures and produce all the output with references. Also, produce the tables in the output wherever needed. For news related data give me the exact source. Reference for each of the number in the output is important"
