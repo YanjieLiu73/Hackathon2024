@@ -7,7 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-from tools import stock_prices
+from tools import stock_prices, sector_top_caps
 
 tablechart = os.path.join(os.path.dirname(__file__), 'tablechart')
 
@@ -47,8 +47,7 @@ def gen_competitors_table(ticker):
     Args:
         ticker (_type_): _description_
     """
-    #TODO: replace this ticker_competitor.csv with backend output
-    df = pd.read_csv(os.path.join(tablechart, f'{ticker}_competitors.csv'))
+    df = sector_top_caps(ticker)
     def highlight_ticker(s):
         return ['color: blue; font-weight: bold' if s['Symbol'] == ticker else '' for _ in s]
     styled_df = df.style.apply(highlight_ticker, axis=1).format({'Market Cap': '{:.2e}'}, precision=2)
