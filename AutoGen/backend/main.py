@@ -31,6 +31,9 @@ if len(glob.glob(f"{cwd}/../../faiss-db/*/*.faiss")) == 0:
 else:
     initialize_vector_store(None)
 
+# initialize_vector_store(file_mapping)
+
+
 print('done with vector store init\n')
 
 
@@ -106,7 +109,7 @@ async def management_info(company):
 
 # question  13, 14, 15, 16, 17
 async def financial_info(company):
-    # financial_info_team = team(['sec_filling_report_analysis_agent', 'news_analysis_agent', 'research_report_analysis_agent', 'stock_price_analysis_agent', 'report_agent'])
+
     financial_info_team = team(['financial_statement_analysis_agent', 'report_agent'])
 
     questions = [
@@ -126,7 +129,7 @@ async def financial_info(company):
 
 # question 18, 19
 async def oppotunities_competition_info(company):
-    oppo_compet_team = team(['news_analysis_agent', 'research_report_analysis_agent', 'report_agent'])
+    oppo_compet_team = team(['news_analysis_agent', 'research_report_analysis_agent', 'financial_statement_analysis_agent', 'report_agent'])
 
     questions = [
         "Who are company's competitors?",
@@ -175,7 +178,7 @@ async def M_n_A_profile(company):
 
 # result = asyncio.run(overview("GOOGLE"))
 # result = asyncio.run(recent_news_trends("GOOGLE"))
-# result = asyncio.run(financial_info("GOOGLE"))
+result = asyncio.run(financial_info("GOOG"))
 # result = asyncio.run(oppotunities_competition_info("GOOGLE"))
 # result = asyncio.run(geographic("GOOGLE"))
 # result = asyncio.run(M_n_A_profile("GOOGLE"))

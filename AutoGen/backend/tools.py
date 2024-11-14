@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 current_dir = os.path.dirname(__file__)
 data_path = os.path.join(current_dir, '..', "..", 'Data')
 df_financial = pd.read_csv(data_path + "/financials_SP500_hack/" + "financials.csv")
-df_statements = pd.read_csv(data_path + "/financial_statement_hack/" + "Financial Statements.csv")
+df_financial_statements = pd.read_csv(data_path + "/financial_statement_hack/" + "Financial Statements.csv")
 
 
 def stock_prices(ticker: str) -> pd.DataFrame:
@@ -44,7 +44,7 @@ def stock_prices(ticker: str) -> pd.DataFrame:
 
 
 # get the information
-def sector_top_caps(ticker: str, save_dir=None, df_financials=df_financial, top_k=10):
+def sector_top_caps(ticker: str, save_dir=None, df_financials=df_financial, top_k=10) -> pd.DataFrame:
     sector = df_financials[df_financials['Symbol'] == ticker]['Sector'].item()
     df_sector = df_financials[df_financials['Sector'] == sector]
 
@@ -62,7 +62,20 @@ def sector_top_caps(ticker: str, save_dir=None, df_financials=df_financial, top_
     return df_sorted[['Symbol', 'Name', 'Market Cap', 'Price/Earnings', 'Earnings/Share', 'Price/Sales']]
 
 
-def ts_bar_charts(ticker: str, col: str, save_dir=None, df_financial_statements=df_statements):
+def financial_statements(ticker: str) -> pd.DataFrame:
+    df_company = df_financial_statements[df_financial_statements['Company '] == ticker]
+
+    # plt.bar(df_company['Year'], df_company[col])
+    #
+    # if not save_dir == None:
+    #     plt.savefig(save_dir)
+    # plt.xlabel('Year')
+    # plt.ylabel(col)
+    # plt.show()
+
+    return df_company
+
+def ts_bar_charts(ticker: str, col: str, save_dir=None) -> pd.DataFrame:
     df_company = df_financial_statements[df_financial_statements['Company '] == ticker]
 
     plt.bar(df_company['Year'], df_company[col])
