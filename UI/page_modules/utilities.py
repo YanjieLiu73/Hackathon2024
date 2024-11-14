@@ -1,6 +1,7 @@
 from pptx import Presentation
 from pptx.util import Pt, Inches
 import streamlit as st
+import pandas as pd
 import os
 import json
 import sys
@@ -34,7 +35,7 @@ def get_summary(verbose_txt, title, testing=False):
     return concise_txt
 
 # Function to save content to a PowerPoint file
-def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
+def save_content_to_ppt(company_ticker, filename="result/Profiler_Slides.pptx"):
     # Ensure the result directory exists
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     
@@ -68,14 +69,42 @@ def save_content_to_ppt(filename="result/Profiler_Slides.pptx"):
                 paragraph.space_before = Pt(10)
 
             if title == 'Financials':
-                slide.shapes.add_picture("result/bar_chart.png", Inches(6), Inches(1.5), width=Inches(4))
+                if company_ticker=='AAPL':
+                    slide.shapes.add_picture("result/apple.png", Inches(6), Inches(1.5), width=Inches(4))
+                    df = pd.read_csv("result/apple.csv")
+                else:
+                    slide.shapes.add_picture("result/google.png", Inches(6), Inches(1.5), width=Inches(4))
+                    df = pd.read_csv("result/google.csv")
+                df['Market Cap'] = df['Market Cap'].apply(lambda l: l.replace(',', ''))
+                df['Market Cap'] = '$' + (df['Market Cap'].astype(float)/1000000000).round(2).astype(str) + 'BB'
+                df.drop(columns=['Name'], inplace=True)
+                # Create a table
+                x, y, cx, cy = Inches(5.75), Inches(4), Inches(5), Inches(1.5)
+                shape = slide.shapes.add_table(df.shape[0] + 1, df.shape[1], x, y, cx, cy)
+                table = shape.table
 
+                # Add headers
+                for j, col in enumerate(df.columns):
+                    col_name = table.cell(0, j)
+                    col_name.text = col
+                    for paragraph in col_name.text_frame.paragraphs:
+                        for run in paragraph.runs:
+                            run.font.size = Pt(14)
+
+                # Add data
+                for i, row in df.iterrows():
+                    for j, cell_value in enumerate(row):
+                        cell = table.cell(i + 1, j)
+                        cell.text = str(cell_value)
+                        for paragraph in cell.text_frame.paragraphs:
+                            for run in paragraph.runs:
+                                run.font.size = Pt(12)          
 
     # Save the presentation
     prs.save(filename)
 
 # Function to save content to a PowerPoint file
-def save_content_to_pdf(filename="result/Profiler_Report.pdf"):
+def save_content_to_pdf(company_ticker, filename="result/Profiler_Report.pdf"):
 
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
                        "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
@@ -93,6 +122,28 @@ def save_content_to_pdf(filename="result/Profiler_Report.pdf"):
             pdf.set_font(family="dejavu-sans", style="", size=12)
             pdf.write_html(html_text)
             if title=='Financials':
-                pdf.cell(200, 10, link=pdf.image("result/bar_chart.png", w=100, h=80), align = 'C')
+                pdf.set_x(40)
+                if company_ticker=='AAPL':
+                    pdf.cell(40, 10, link=pdf.image("result/apple.png", w=100, h=80), align = 'C')
+                    df = pd.read_csv("result/apple.csv")
+                else:
+                    pdf.cell(40, 10, link=pdf.image("result/google.png", w=100, h=80), align = 'C')
+                    df = pd.read_csv("result/google.csv")
+                df['Market Cap'] = df['Market Cap'].apply(lambda l: l.replace(',', ''))
+                df['Market Cap'] = '$' + (df['Market Cap'].astype(float)/1000000000).round(2).astype(str) + 'BB'
+                df.drop(columns=['Name'], inplace=True)
+
+                # Add table header
+                pdf.set_font(family="dejavu-sans", style="", size=8)
+                pdf.set_x(10)
+                for col_name in df.columns:
+                    pdf.cell(35, 10, col_name, 1, 0, 'C')
+                pdf.ln()
+
+                # Add table rows
+                for index, row in df.iterrows():
+                    for col_value in row:
+                        pdf.cell(35, 10, str(col_value), 1, 0, 'C')
+                    pdf.ln()
     # save the pdf with name .pdf
     pdf.output(filename)   

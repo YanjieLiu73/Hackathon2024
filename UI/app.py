@@ -133,10 +133,10 @@ if st.session_state["started"]:
             st.sidebar.markdown(title)
     # Download presentation
     if st.sidebar.button("Download Slides", key=page+"_ppt"):
-        save_content_to_ppt()
+        save_content_to_ppt(company_ticker)
         st.write("The slides have been downloaded successfully.")
     if st.sidebar.button("Download Report", key=page+"_pdf"):
-        save_content_to_pdf()
+        save_content_to_pdf(company_ticker)
         st.write("The report has been downloaded successfully.")
 else:
     show_overview()
