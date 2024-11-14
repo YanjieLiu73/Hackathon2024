@@ -1,11 +1,5 @@
-
-# load environment variable - saved project root folder
 import os
-# from dotenv import load_dotenv
-# env_path = os.path.join(os.path.dirname(__file__), '..' , '..', ".env")
-# load_dotenv(dotenv_path = env_path)
-# os.environ['AZURE_OPENAI_API_KEY'] = os.getenv('AZURE_OPENAI_API_KEY')
-# os.environ['AZURE_OPENAI_ENDPOINT'] = os.getenv('AZURE_OPENAI_ENDPOINT')
+
 os.environ["AZURE_OPENAI_API_KEY"] = "1b31fc4eb58c4879960c46f697d72af6"
 os.environ["AZURE_OPENAI_ENDPOINT"] = "https://genai-openai-quantifai.openai.azure.com/"
 
@@ -13,9 +7,7 @@ os.environ["AZURE_OPENAI_ENDPOINT"] = "https://genai-openai-quantifai.openai.azu
 from langchain_openai import AzureOpenAIEmbeddings
 
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import TextLoader
 from bs4 import BeautifulSoup
 import glob
 from langchain_core.documents import Document
@@ -87,7 +79,8 @@ def create_vector_database(file_path: str, format: str, chunk_size: int = 1000, 
             chunk_size=chunk_size, separators=["\n","\n\n"], chunk_overlap=chunk_overlap
         ).split_documents(docs)
 
-        FAISS_mr.add_documents(documents=documents)
+        for single_chunck in documents:
+            FAISS_mr.add_documents(documents=[single_chunck])
 
     return FAISS_mr
 
