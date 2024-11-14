@@ -76,7 +76,7 @@ def output(page, company_ticker, button_loc1, button_loc2):
         st.sidebar.write("")
     st.sidebar.markdown("## Output")
     possible_slides = ["Overview", "Financials", "Geographic Mix", "Management",
-                       "Recent News", "M&A Profile", "Miscellanea", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
+                       "Recent News", "M&A Profile", "Miscellaneous", "Discounted Cash Flow Analysis", "Leveraged Buyout Analysis"]
     for title in possible_slides:
         if st.session_state.get(title, False):
             st.sidebar.markdown(title)

@@ -48,7 +48,7 @@ def show_profiler(result):
 #     st.markdown(css, unsafe_allow_html=True)
 
     # Profiler sub-tabs, map to result key
-    tab_list = ["Overview", "Financials", "Geographic Mix", "Management", "Recent News", "M&A Profile", "Miscellanea"]
+    tab_list = ["Overview", "Financials", "Geographic Mix", "Management", "Recent News", "M&A Profile", "Miscellaneous"]
     res_key = ["overview", "financial_info", "geographic", "management_info", "recent_news_trends", "M_n_A_profile", "oppotunities_competition_info"]
     tab_key_map = dict(zip(tab_list, res_key))
     profiler_tabs = st.tabs(tab_list)
@@ -152,7 +152,7 @@ def show_profiler(result):
     with profiler_tabs[6]:
         
         # display 
-        tab = "Miscellanea"
+        tab = "Miscellaneous"
         res_str = result[tab_key_map[tab]]
         st.write(res_str)
 
