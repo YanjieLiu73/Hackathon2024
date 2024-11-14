@@ -140,6 +140,7 @@ if st.session_state["page"] == "Profiler":
 
     if company_ticker:
         result = get_financial_report(ticker = company_ticker, test = True)
+        result['ticker'] = company_ticker
         with st.spinner("PITCHER Running..."):
             time.sleep(5)
             show_profiler(result)
