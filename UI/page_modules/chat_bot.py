@@ -1,15 +1,9 @@
 # pages/chat_bot.py
 import streamlit as st
+import os
 
 # Create an agent that can access and use a large language model (LLM).
 def create_agent():
-
-    # load environment variable - saved project root folder
-    from dotenv import load_dotenv
-    import os
-    env_path = os.path.join(os.path.dirname(__file__), '..', '..' , ".env")
-    load_dotenv(dotenv_path = env_path)
-
     # init AzureChatOpenAI
     from langchain.chat_models import AzureChatOpenAI
     os.environ['AZURE_OPENAI_API_KEY'] = "1b31fc4eb58c4879960c46f697d72af6"
@@ -20,40 +14,9 @@ def create_agent():
     return llm
 
 # Query an agent and return the response as a string.
-def query_agent(agent, query):
+def query_agent(agent, company_ticker, query):
 
-    prompt = (
-        """
-            For the following query, if it requires drawing a table, reply as follows:
-            {"table": {"columns": ["column1", "column2", ...], "data": [[value1, value2, ...], [value1, value2, ...], ...]}}
-
-            If the query requires creating a bar chart, reply as follows:
-            {"bar": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-
-            If the query requires creating a line chart, reply as follows:
-            {"line": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-
-            There can only be two types of chart, "bar" and "line".
-
-            If it is just asking a question that requires neither, reply as follows:
-            {"answer": "answer"}
-            Example:
-            {"answer": "The title with the highest rating is 'Gilead'"}
-
-            If you do not know the answer, reply as follows:
-            {"answer": "I do not know."}
-
-            Return all output as a string. Please do not reply any code, only text message is fine.
-
-            All strings in "columns" list and data list, should be in double quotes,
-
-            For example: {"columns": ["title", "ratings_count"], "data": [["Gilead", 361], ["Spider's Web", 5164]]}
-
-            Lets think step by step.
-
-            Below is the query.
-            Query: 
-            """
+    prompt = ("Please answer the queries as a professional financial analyst. Please answer the queries based on the given company, the company ticker is " + company_ticker + ". Below is the query. Query: "
         + query
     )
 
@@ -65,7 +28,7 @@ def query_agent(agent, query):
 
 
 
-def show_chat_bot():
+def show_chat_bot(company_ticker):
     
     # Initialize chat history in session state
     if "chat_history" not in st.session_state:
@@ -81,7 +44,7 @@ def show_chat_bot():
         llm = create_agent()
     
         # Query the agent.
-        response = query_agent(agent=llm, query=query)
+        response = query_agent(agent=llm, company_ticker=company_ticker, query=query)
 
         # Add user query and model response to chat history
         st.session_state.chat_history.append({"sender": "User", "message": query})

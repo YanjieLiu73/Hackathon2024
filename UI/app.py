@@ -20,13 +20,13 @@ st.set_page_config(
 with open('style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.image("barclays.PNG", use_container_width=True)
+st.image("pitcher.PNG", use_column_width=True)
 
 st.markdown(
     """
     <style>
     img{
-    width: 30% !important;
+    width: 70% !important;
     padding-top:15px;
     gap:0.5rem;
     }
@@ -78,7 +78,7 @@ def add_styling():
     """)
 
 # layout for "Company/ Ticker" input and Start button
-st.markdown("#### Company/ Ticker")
+st.markdown("##### Company Ticker")
 ticker_options = [ "AAL", "AAPL", "AMZN", "GOOGL", "JBLU", "LUV", "META", "NVDA", "SAVE", "UAL"]
 company_ticker = st_free_text_select(
     label=None,
@@ -93,7 +93,7 @@ company_ticker = st_free_text_select(
 
 if company_ticker:
     st.session_state["started"] = True
-    result = get_financial_report(ticker = company_ticker, test = False)
+    #result = get_financial_report(ticker = company_ticker, test = True)
 
 
 # Initialize session state for "started" if not already set
@@ -101,13 +101,22 @@ if "started" not in st.session_state:
     st.session_state["started"] = False
     
 # Adjust the number as needed to create more space
-for _ in range(5):  
-    st.sidebar.write("")
+for _ in range(2):  # Adjust the number as needed to create more space
+    st.sidebar.write("#### ")
+    
 # Navigation using st.radio for persistent state
 add_styling()
 st.sidebar.markdown("## Navigation")
 page = st.sidebar.radio("Go to", ["Profiler", "Chat Bot", "Valuation", "About", "Help"], label_visibility="collapsed")
 
+for _ in range(10):  # Adjust the number as needed to create more space
+    st.sidebar.write("")
+
+st.sidebar.markdown("## Upload a File")
+uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
+if uploaded_file is not None:
+    st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
+    
 # Only display the content if "Start" button has been clicked
 if st.session_state["started"]:
     
@@ -115,11 +124,13 @@ if st.session_state["started"]:
     st.session_state["page"] = page
 
     if st.session_state["page"] == "Profiler":
+        result = get_financial_report(ticker = company_ticker, test = True)
         show_profiler(result)
     elif st.session_state["page"] == "Chat Bot":
-        show_chat_bot()
+        show_chat_bot(company_ticker)
     elif st.session_state["page"] == "Valuation":
-        show_valuation()
+        if uploaded_file is not None:
+            show_valuation(uploaded_file)
     elif st.session_state["page"] == "About":
         show_about()
     elif st.session_state["page"] == "Help":
@@ -142,26 +153,26 @@ else:
     show_overview()
     
 # Display slides which will be included in presentation
-if st.session_state.get("page", False) in ["Profiler", "Chat Bot", "Valuation", "About", "Help"]:
+# if st.session_state.get("page", False) in ["Profiler", "Chat Bot", "Valuation", "About", "Help"]:
     # File uploader in the sidebar
     # Add some space at the top of the sidebar
-    for _ in range(20):  # Adjust the number as needed to create more space
-        st.sidebar.write("")
+#     for _ in range(10):  # Adjust the number as needed to create more space
+#         st.sidebar.write("")
 
-    st.sidebar.markdown("### Upload a File")
-    uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
+#     st.sidebar.markdown("## Upload a File")
+#     uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx", "pdf"], key="file_uploader")
 
-    # Display uploaded file info (for demonstration)
-    if uploaded_file is not None:
-        st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
-        if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-            df = pd.read_excel(uploaded_file)
-            st.write("### Uploaded Excel File Content")
-        elif uploaded_file.type == "text/csv":
-            df = pd.read_csv(uploaded_file)
-            st.write("### Uploaded CSV File Content")
-        elif uploaded_file.type == "application/pdf":
-            st.write("PDF files cannot be displayed directly here, but they are uploaded successfully.")
+#     # Display uploaded file info (for demonstration)
+#     if uploaded_file is not None:
+#         st.sidebar.write(f"Uploaded file: {uploaded_file.name}")
+#         if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+#             df = pd.read_excel(uploaded_file)
+#             st.write("### Uploaded Excel File Content")
+#         elif uploaded_file.type == "text/csv":
+#             df = pd.read_csv(uploaded_file)
+#             st.write("### Uploaded CSV File Content")
+#         elif uploaded_file.type == "application/pdf":
+#             st.write("PDF files cannot be displayed directly here, but they are uploaded successfully.")
 
         
 css = '''
