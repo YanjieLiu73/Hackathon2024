@@ -1,6 +1,11 @@
+import os
+import sys
+sys.path.append(os.path.dirname(__file__))
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from tablechartutil import generate_financial_tab
 
 # Sample data for financials and geographic distribution
 ####
@@ -63,13 +68,31 @@ def show_profiler(result):
 
         # display
         tab = "Financials"
-        res_str = result[tab_key_map[tab]]
-        st.write(res_str)
+        # res_str = result[tab_key_map[tab]]
+        # st.write(res_str)
 
         # download ppt
         agree = st.checkbox(f"Add {tab}",
                             value = st.session_state.get(tab, False))
         st.session_state[tab] = res_str if agree else False
+        
+        ticker = result['ticker']
+        tablechart = os.path.join(os.path.dirname(__file__), 'tablechart')
+        styled_df = generate_financial_tab(ticker)
+        
+        
+        st.subheader('Historical Stock Price Performance')
+        st.image(os.path.join(tablechart, f'{ticker}_cumret.png'), width = 2000)
+        
+        st.subheader('Sector Comparison')
+        col1, col2 = st.columns(2)
+        with col1:
+            st.table(styled_df)
+        with col2:
+            st.image(os.path.join(tablechart, f'{ticker}_pie.png'), width = 1000)
+            
+        st.subheader('Financial Snapshot')
+        st.image(os.path.join(tablechart, f'{ticker}_finsnap.png'), width = 1200)
 
     
     with profiler_tabs[2]:
